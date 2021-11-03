@@ -1,0 +1,247 @@
+.div-configpage{
+  width: 80vw;
+  margin:  1rem; 
+  float: right;
+  text-align: left;
+  
+}
+
+
+.div-model-1 {
+  display: flex;
+  /* justify-content:space-between; */
+  /* align-items: center; */
+  width: 80vw;
+  float: right;
+  column-gap: 1vw;
+  /* row-gap: 1vh;
+  margin:  1rem;  */
+}
+.tablecontainer {
+  display: flex;
+  width: 40vw;
+  height: 45vh;
+   flex-direction: column; 
+  background: #ffffff 0% 0% no-repeat padding-box;
+  box-shadow: 0px 0.2rem 0.2rem #003e6129;
+  border: 1px solid #e4e4e4;
+  border-radius: 1rem;
+  opacity: 1;
+  padding: 1rem 1rem 1rem 1rem;
+  align-content: center;
+  /* margin:  1rem;  */
+  scroll-behavior: smooth;
+  /* overflow: scroll; */
+  white-space: nowrap;
+  scroll-behavior: auto;
+  /* font: normal normal normal 16px/5px Roboto; */
+  overflow-y: scroll;
+}
+
+.td {
+  border: 1px solid #ffffff;
+  text-align: left;
+  padding: 0.8rem 1rem 1rem 2rem;
+  font-size: 0.7rem;
+  font-weight: bold;
+  font-stretch: 1rem;
+  column-gap: 5rem;
+  width: 6vw;
+  justify-content: space-evenly;
+}
+
+.th {
+  color: #0f206c;
+  font-size: 0.7rem;
+  padding: 1rem 1rem 0.3rem 2rem;
+  justify-content: space-evenly;
+  font-weight: bold;
+  font-stretch: 1rem;
+  text-align: left;
+  width: 6vw;
+  border-bottom: 1px solid #212121;
+  /* border-style: outset; */
+  /* border-style:solid ;
+  border-bottom: 1px solid #212121;
+  border:0px 0px 1px 0px; */
+  
+}
+.table {
+  border-collapse: collapse;
+}
+
+.form {
+  display: flex;
+  /* gap: 5px; */
+  font-size: 0.8rem;
+
+  /* padding: 1rem; */
+}
+
+form td:last-child {
+  display: flex;
+  justify-content: space-between;
+}
+
+/* td {
+  background-color: rgb(205, 235, 253);
+} */
+.div-model-2 {
+  display: flex;
+  flex-direction: column;
+  background: #FFFFFF 0% 0% no-repeat padding-box;
+  box-shadow: 0px 0.2rem 0.2rem #003e6129;
+  border: 1px solid #EEEEEE;
+  border-radius: 1rem;
+  opacity: 1;
+  padding: 1rem 1rem 1rem 1rem;
+  align-content: center;
+  margin-top: 1rem;
+  width: 78vw;
+  float: right;
+  
+  /* text-align: left; */
+
+  /* width: 1699px; */
+/* height: 233px; */
+
+
+opacity: 1;
+}
+.option {
+  width: 16vw;
+  height: 5vh;
+  margin-left: 0.5rem;
+  color: #212121;
+  /* font: normal normal normal 16px/5px Roboto; */
+  font-size: 0.7rem;
+  font-weight: bold;
+}
+.select {
+  width: 16vw;
+  height: 5vh;
+  background: #ffffff 0% 0% no-repeat padding-box;
+  border: 1px solid #bdbdbd;
+  opacity: 1;
+  margin-left: 0.5rem;
+  color: #78909c;
+  /* font: normal normal normal 16px/5px Roboto; */
+  font-size: 0.7rem;
+}
+h3 {
+  text-align: left;
+  font-size: 1rem;
+}
+
+.uploadbutton {
+  width: 16vw;
+  height: 5vh;
+  background: #0f206c 0% 0% no-repeat padding-box;
+  color: white;
+  border-radius: 5px;
+  opacity: 1;
+  margin: 0.5rem;
+  margin-top: 2rem;
+  font: normal normal normal 16px/5px Roboto;
+  font-size: 0.7rem;
+  cursor: pointer;
+}
+
+.over{
+  color: aqua;
+overflow: hidden;
+}
+
+ .configupload{
+  display: flex;
+  justify-content: space-around;
+  text-align: left;
+  
+}
+
+
+.configbrowse{
+  width: 3vw;
+height: 5vh;
+font-size: 0.6rem;
+background: #212121;
+border: 1px solid #212121;
+opacity: 1;
+letter-spacing: 0px;
+color: #FFFFFF;
+font: normal normal normal 14px/1px Roboto;
+text-align: center; 
+padding: 0.75rem;
+} 
+
+.config-uploadmodel{
+  line-height: 2rem;
+}
+
+
+
+
+
+
+
+
+
+
+
+.abcdef {
+  text-align: center;
+  width: 656px;
+height: 300px;
+background: #FFFFFF 0% 0% no-repeat padding-box;
+border: 1px solid #BDBDBD;
+border-radius: 5px;
+opacity: 1;
+padding-top: 80px;
+line-height: 50px;
+}
+
+.sucess{
+  width: auto;
+height: 520px;
+  /* background: #000000 0% 0% no-repeat padding-box; */
+opacity: 0.7;
+text-align: center;
+padding: 100px 0 0px 350px;
+}
+
+.sucesslogo{
+  width: 61px;
+  top: -400px;
+height: 61px;
+/* background: transparent url('img/.png') 0% 0% no-repeat padding-box; */
+ opacity: 1;
+ position: relative;
+}
+
+.sucesstext{ 
+  /* width: 421px; */
+/* height: 29px; */
+/* text-align: left; */
+ font: normal normal medium 24px/1px Roboto;
+letter-spacing: 0px;
+color: #212121;
+opacity: 1;
+top: -400px;
+position: relative;
+}
+
+/* @media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+} */  

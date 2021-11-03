@@ -1,0 +1,54 @@
+.App {
+  /* text-align: center; */
+}
+
+img.nfpc-logo {
+  width: 69px;
+  height: 44px;
+}
+img.appstek-logo {
+  width: 99px;
+  height: 44px;
+  border-right: 2px solid black;
+}
+div.logos {
+  width: 70%;
+}
+.MuiPaper-root {
+  display: flex !important;
+  flex-direction: row !important;
+  justify-content: space-around;
+  align-items: center;
+  height: 100px;
+  background-color: #ffffff !important;
+}
+.nav-tab {
+  /* border: 2px solid black; */
+  height: 100vh;
+}
+div.search-icons {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  gap: 27px;
+  align-items: center;
+  color: black;
+}
+.search-icons > svg {
+  font-size: 30px;
+  color: #111111;
+  opacity: 0.8;
+}
+.search-icon {
+  /* color: black; */
+  /* background-color: black; */
+}
+.nav-content {
+  background-color: #eeeeee;
+  width: 100%;
+}
+a{
+  text-decoration: none;
+  color: black;
+  font-weight: bold;
+}

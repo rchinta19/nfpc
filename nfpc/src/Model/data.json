@@ -1,0 +1,26 @@
+[
+  {
+    "Model": "Model-A",
+    "Version": "V3.5.4",
+    "LastUpdate": "21/5/2021",
+    "Status": "Active"
+  },
+  {
+    "Model": "Model-B",
+    "Version": "V3.1.2",
+    "LastUpdate": "19/2/2021",
+    "Status": "inactive"
+  },
+  {
+    "Model": "Model-A",
+    "Version": "V2.4.05",
+    "LastUpdate": "15/1/2021",
+    "Status": "inactive"
+  },
+  {
+    "Model": "Model-B",
+    "Version": "V2.1.00",
+    "LastUpdate": "5/1/2021",
+    "Status": "inactive"
+  }
+]
