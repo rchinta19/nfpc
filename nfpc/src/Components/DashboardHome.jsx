@@ -60,10 +60,9 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 function DashboardHome(props) {
+
   const dispatch = useDispatch()
-console.log(props.location)
-console.log(props.match)
-console.log(props.history)
+
   const classes = useStyles();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const LogoutHandler = () => {
@@ -73,11 +72,15 @@ console.log(props.history)
       setIsLoggedIn(!res.data);
     });
     dispatch(LoggingUser({UserPresent:false}))
+
     
   };
   let CurrentLocation = props.location
   let currentUserPath = useSelector((state)=>state.userLog.currentPath)
+  console.log(currentUserPath)
   const [p,setP] = useState(currentUserPath)
+
+
 
   return (
     <Grid container className="App">
@@ -92,26 +95,23 @@ console.log(props.history)
             <img src={nfpc} alt="logo" className="nfpc-logo" />
           </div>
           <div className="search-icons">
-            <SearchIcon />
-            <InputBase
-              className={classes.searchStyles}
-              placeholder="Search…"
-            ></InputBase>
-            <NotificationsOutlinedIcon
-              className={classes.IconStyles + ` icon-not`}
-            />
+          
+          
             <PersonOutlineOutlinedIcon
               className={classes.IconStyles + ` icon-not`}
             />
             <PowerSettingsNewOutlinedIcon
               onClick={(e) => {
                 LogoutHandler();
+                localStorage.clear() 
               }}
+            
               className={classes.IconStyles + ` icon-not`}
             />
           </div>
         </AppBar>
       </Grid>
+
 
       <Grid xs={1} className="nav-tab">
         <Sidenav />

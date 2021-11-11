@@ -6,37 +6,49 @@ import SettingsApplicationsIcon from "@mui/icons-material/SettingsApplications";
 import "./Sidenav.modules.css";
 import { Link } from "react-router-dom";
 import { MdOutlineHistoryEdu } from "react-icons/md";
+import styled from "styled-components";
+
+const StyledLink = styled(Link)`
+   text-decoration: none;
+   text-align:center;
+  &:hover, &:active,  &:focus{
+    color: rgb(180, 124, 233);
+}
+`;
 
 export default function Sidenav(props) {
   return (
     <div className="sidenav">
-      <div>
+       <div>
+        <StyledLink  to="/homeDashboard/Dashboard">
         <DashboardIcon className="nav-icont-c" />
-        <Link to="/homeDashboard/Dashboard">
           <h3>Dashboard</h3>
-        </Link>
+        </StyledLink>
       </div>
 
       <div>
+        
+        <StyledLink to="/homeDashboard/Configuration">
         <SettingsApplicationsIcon />
-        <Link to="/homeDashboard/Configuration">
           <h3>Configuration</h3>
-        </Link>
+        </StyledLink >
       </div>
 
       <div>
+      
+      <StyledLink  to="/homeDashboard/changedata">
       <MdOutlineHistoryEdu />
-      <Link to="/homeDashboard/changedata">
         
-        <h3>Change Data</h3></Link>
+        <h3>History</h3></StyledLink >
         
       </div>
 
       <div>
+       
+        <StyledLink  to="/homeDashboard/help">
         <HelpIcon />
-        <Link to="/homeDashboard/help">
           <h3>Help</h3>
-        </Link>
+        </StyledLink >
       </div>
     </div>
   );

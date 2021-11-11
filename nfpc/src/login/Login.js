@@ -66,6 +66,8 @@ const Login = (props) => {
       .then((res) => {
         console.log(res)
         if (res.data) {
+         localStorage.setItem("userPresent",res.data)
+
          dispatch(LoggingUser({UserPresent:res.data,path:"/homeDashboard/Dashboard"}))
          
         }

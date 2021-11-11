@@ -5,11 +5,16 @@
 img.nfpc-logo {
   width: 69px;
   height: 44px;
+  margin-left: 10px;
+  padding:4px;
+
 }
 img.appstek-logo {
   width: 99px;
-  height: 44px;
+  height: 50px;
   border-right: 2px solid black;
+  margin-left: 50px;
+  padding:6px;
 }
 div.logos {
   width: 70%;

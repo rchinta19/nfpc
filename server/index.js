@@ -19,7 +19,7 @@ app.use(
   })
 );
 app.use(cookieParser())
-const dealy = 1000*60*60*1
+const dealy = 1000*60*60*24
 app.use(sessions({
   secret:"Su[pposed",
   name:"nfpc Session",
@@ -77,9 +77,10 @@ const checkSignIn = (req,res,next)=>{
     }
   }
   else{
-    return
     console.log("User does not exist")
     next()
+    return
+
   }
 }
 app.get('/logout',function(req,res){
@@ -96,7 +97,6 @@ app.get('/logout',function(req,res){
     db.run(updateLogger,[`${hrs}:${mins}:${millsec} ${dt}-${mnth}-${yer}`,userMail],()=>{
       console.log("updated")
     })
-    req.session.distroy()
     res.send(true)
 }
 
@@ -116,7 +116,6 @@ if (!fs.existsSync(folder)){
   if (!req.files) {
     console.log("failed");
       return res.status(500).send({ msg: "file is not found" })
-     
   }
   const File=req.files.file;
   console.log(req.body.value)
@@ -153,7 +152,6 @@ app.post('/upload', function (req,res) {
   // upload data in model status in above
 // Harsha Update
 app.post('/historyfilter', (req,res) => {
-  console.log("request arrivedf")
 
   // let filterdata = `select * from historylog where Sl_No BETWEEN ? AND ?`;
   db.all(`select * from historylog where Time_Stamp BETWEEN ? AND ?`,[req.body.from,req.body.to+1],(err, hfrows) => {
@@ -192,8 +190,8 @@ app.post('/historyfilter', (req,res) => {
   //end 
 // edit data in system thershold in below
 app.post('/edit' , function(req,res){
-  let data = [req.body.editvalue,req.body.store];
-  let sql = `UPDATE SystemThreshold SET Score = ? WHERE Score = ?`;
+  let data = [req.body.editvalue,req.body.Sl_No];
+  let sql = `UPDATE SystemThreshold SET Score = ? WHERE Sl_No = ?`;
 
     db.run(sql, data, function(err,edit){
     if (err) {
@@ -208,13 +206,15 @@ app.post('/edit' , function(req,res){
   // edit data in system thershold in above
   // amar---update
   // defectlog table rendering
-app.get("/defectlog", (req, res) => {
-  const sql3 = `Select * from Defectlog where Sl_No<=?`;
-  db.all(sql3,[10], (err, rows) => {
+app.post("/defectlog", (req, res) => {
+  const sql3 = `Select * from Defectlog where Time_Stamp between ? and ?`;
+
+  db.all(sql3,[String(req.body.from),String(req.body.to)], (err, rows) => {
     if (err) {
       console.log(err);
     }
     res.send(rows);
+
   });
 });
 // defectlog table rendering
@@ -222,7 +222,7 @@ app.get("/defectlog", (req, res) => {
 
 //marking false positive to 1
 app.post("/markfalsepositiveto1",(req,res) =>{
-  console.log(req.body.Sl_No)
+  console.log(req.body.Sl_No) 
   let data = [1,req.body.Sl_No];//removed Sl_No
   let sql = `UPDATE Defectlog SET Mark_False_Positive = ? WHERE Sl_No = ?`;
 
@@ -352,7 +352,6 @@ app.post("/data/filter",checkSignIn, (req, res) => {
   }
 
 
-
   console.log(bottletypes)
 
   console.log(filters);
@@ -363,6 +362,7 @@ app.post("/data/filter",checkSignIn, (req, res) => {
       console.log(err)
     }
     res.send(rows)
+    console.log(rows)
   })
   console.log(bottletypes)
 })

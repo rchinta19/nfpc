@@ -17,6 +17,7 @@ const Table = (props) => {
     .post('/edit', {
       editvalue:editvalue,
       store:store,
+      Sl_No:props.itm.Sl_No
            
     })
     // if (!newName.trim()) {

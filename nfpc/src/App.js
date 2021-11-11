@@ -34,19 +34,23 @@ function App() {
   const dispatch = useDispatch()
   const [x, settingx] = useState(true);
   let userPresent = useSelector(state => state.userLog.UserPresent)
-  const [isLoggedIn, setIsLoggedIn] = useState(userPresent);
+  console.log(userPresent)
+  let y = localStorage.getItem("userPresent")
+  console.log(y)
+  const [isLoggedIn, setIsLoggedIn] = useState(y);
   console.log(isLoggedIn)
+
   // const isLogedHandler = (val) => {
   //   setIsLoggedIn(val)
   // };
   // console.log(location.pathname)
   useEffect(()=>{
-    setIsLoggedIn(userPresent)
-  },[userPresent])
+    setIsLoggedIn(localStorage.getItem("userPresent"))
+  },[y,isLoggedIn,userPresent])
   const p = useSelector(state=>state.userLog.currentPath)
   console.log(p)
-  
-  return (
+ 
+  return (  
     <Router>
       <Switch>
         <SecuredRoute
@@ -56,9 +60,9 @@ function App() {
         />
         <Route to="/">
           {!isLoggedIn ? (
-            <Login  />
+            <Login />
           ) : (
-            <Redirect to={p} />
+            <Redirect to={"/homeDashboard/Dashboard"} />
           )}
         </Route>
       </Switch>

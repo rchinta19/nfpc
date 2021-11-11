@@ -172,16 +172,23 @@ const columns = [
   }
 
 ];
+const config = {
+  headers: {
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
+  },
+};
   
   useEffect(() => {
-    axios.get("/defectlog").then((res) => {
+    axios.post("/defectlog",{from:props.fromDate,to:props.toDate},config).then((res) => {
+      console.log(res.data)
        settotalBottleCount(res.data)
       });
     // console.log("executed")
     // axios.post('/data/filter',{filterString:"",queryParams:[]},config).then(res=>{
     //   console.log(res)
     // }).catch(err=>console.error(err))
-  }, [ticked]);
+  }, [props.fromDate]);
 
  
  

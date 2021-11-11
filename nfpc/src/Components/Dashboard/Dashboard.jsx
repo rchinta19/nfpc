@@ -30,7 +30,7 @@ function Dashboard() {
   const [checkBox, setCheckBox] = useState(false)
   const [tab, settab] = useState(true)
   const x = new Date()
-  let givenDate = `${x.getMonth()+1}/${x.getDate()}/${x.getFullYear()}`
+  let givenDate = `${x.getFullYear()}-${x.getMonth()+1}-${x.getDate()}`
   const [checkedValues, setCheckedValues] = useState({
     fromDate:givenDate,
     toDate: givenDate,
@@ -62,15 +62,18 @@ function Dashboard() {
     dispatch(filterHandler({ ...checkedValues }));
     console.log(filterConditions);
     axios.post("/data/filter", checkedValues, config).then((res) => {
+      console.log("here")
       console.log(res.data);
       dispatch(defectSettingHandler({ typeA: res.data }));
+  
     });
 
  
   };
-  
+ 
 
   useEffect(() => {
+  
     axios.get("/data").then((res) => {
         const [typea, typeb] = res.data;
         dispatch(defectSettingHandler({ typeA: typea, typeB: typeb }));
@@ -97,7 +100,7 @@ function Dashboard() {
                   setValue((prev) => {
                     return { ...prev, fromd: value };
                   });
-                  setCheckedValues({ ...checkedValues, fromDate:`${value.getMonth()+1}/${value.getDate()}/${value.getDate()}` });
+                  setCheckedValues({ ...checkedValues, fromDate:`${value.getFullYear()}-${value.getMonth()+1}-${value.getDate()}` });
                 }}
                 renderInput={(params) => <TextField {...params} />}
               />
@@ -109,7 +112,7 @@ function Dashboard() {
                   setValue((prev) => {
                     return { ...prev, tod: value };
                   });
-                  setCheckedValues({ ...checkedValues, toDate: value });
+                  setCheckedValues({ ...checkedValues, toDate:`${value.getFullYear()}-${value.getMonth()+1}-${value.getDate()}`});
                 }}
                 renderInput={(params) => <TextField {...params} />}
               />
@@ -223,7 +226,7 @@ function Dashboard() {
       )}</>) : 
         <Grid xs={12}>
           <Paper>
-          <DefectsTable/>
+          <DefectsTable fromDate={checkedValues.fromDate} toDate={checkedValues.toDate}/>
           </Paper>
         </Grid>
 

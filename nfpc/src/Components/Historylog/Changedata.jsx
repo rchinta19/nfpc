@@ -12,6 +12,7 @@ import { TiArrowUnsorted } from "react-icons/ti";
 import PaginationItem from '@mui/material/PaginationItem';
 import { Link, MemoryRouter, Route } from 'react-router-dom';
 import Pagination from '@mui/material/Pagination';
+import { makeStyles } from '@mui/styles';
 
 function Changedata() {
 
@@ -87,6 +88,13 @@ function Changedata() {
     .catch(err=>console.log(err))  
     
   },[ ])
+  const useStyles = makeStyles({
+    root: {
+      '& .super-app-theme--header': {
+        backgroundColor: 'rgba(255, 7, 0, 0.55)',
+      },
+    },
+  });
 
 // below is sample
 const columns = [
@@ -94,6 +102,7 @@ const columns = [
   
       field: "Sl_No",  
       headerName: "Sl_No",
+  headerClassName: 'super-app-theme--header',
   
       type: "number",
   
@@ -106,6 +115,7 @@ const columns = [
         field: "User_Name",
     
         headerName: "User_Name",
+    headerClassName: 'super-app-theme--header',
     
         type: "text",
     
@@ -118,6 +128,7 @@ const columns = [
       field: "Time_Stamp",
   
       headerName: "Time_Stamp",
+  headerClassName: 'super-app-theme--header',
   
       type: "text",
   
@@ -132,6 +143,7 @@ const columns = [
       field: "Item_Modified",
   
       headerName: "Item_Modified",
+  headerClassName: 'super-app-theme--header',
   
       type: "text",
   
@@ -144,6 +156,7 @@ const columns = [
       field: "Table_Name",
   
       headerName: "Table_Name",
+  headerClassName: 'super-app-theme--header',
   
       type: "text",
   
@@ -156,6 +169,7 @@ const columns = [
       field: "Old_Value",
   
       headerName: "Old_Value",
+  headerClassName: 'super-app-theme--header',
   
       type: "text",
   
@@ -168,6 +182,7 @@ const columns = [
       field: "New_Value", 
   
       headerName: "New_Value",
+  headerClassName: 'super-app-theme--header',
   
       type: "text",
   
@@ -179,7 +194,7 @@ const columns = [
 // above is sample
 
 
-
+const classes = useStyles();
 // function getSl_No(params) {
 //   return `${params.getValue(params.id, 'Sl_No') }`}
 
@@ -241,7 +256,7 @@ onChange={(e) => setto(e.target.value)}
 
 
             {/* below is sample */}
-            <div style={{ height: 450, width: "100%", backgroundColor: "white" }}>
+            <div style={{ height: 450, width: "100%", backgroundColor: "white" }} className={classes.root}>
 
       <DataGrid
           rows={historydata} 

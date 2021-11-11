@@ -129,7 +129,7 @@ const Modelstatuslist = (props) => {
             console.log(res);
             // getFile({ name: res.data.name, path: 'http://localhost:5000' + res.data.path })
             alert("file is uploaded")
-            // setDisplay(true);
+             setDisplay(true);
             // el.current.value = "";
             axios
             .post('/upload', {
