@@ -103,6 +103,34 @@ app.get('/logout',function(req,res){
  userMail=""
 })
 
+app.post("/changepassword",(req,res) =>{
+  console.log("request for change password is arrived")
+  let data=[req.body.Email_Id,req.body.Password,req.body.Newpassword,req.body.reenternewpassword]
+  console.log(data)
+
+  db.get(`SELECT * FROM Userlogins where Email_Id=? and Password=?`, [req.body.Email_Id,req.body.Password], function(err, rows) {
+ 
+    if(rows.Email_Id == req.body.Email_Id && rows.Password==req.body.Password){
+      console.log("query executed")
+      if(req.body.Newpassword==req.body.reenternewpassword)
+    db.run(`UPDATE Userlogins SET Password = ? WHERE Email_Id = ?`,[req.body.Newpassword,req.body.Email_Id],function(err, urows){
+      console.log("password is changed")
+      res.send()
+    })
+    else {
+      console.log("password is not changed")
+    }
+  }
+  else {
+    console.log("password is not changed")
+  }  
+  
+  })
+  
+  });
+  
+  
+
 
 
 // below is for upload model
@@ -168,21 +196,159 @@ app.post('/historyfilter', (req,res) => {
   })
 
 });
+// new deflog render
+app.post('/defectlogdaydata', (req,res) => {
+  console.log("request for historylog arrived")
+  console.log(req.body.from)
+  console.log(req.body.to)
+  console.log(req.body.skip)
+  console.log(req.body.limit)
+  let value = (req.body.skip);
+  console.log(value);
+  // let filterdata = `select * from historylog where Sl_No BETWEEN ? AND ?`;
+ db.all(`select * from Defectlog where Time_Stamp BETWEEN ? AND ?   LIMIT ? OFFSET  ?`,[req.body.from,req.body.to,req.body.limit,value],(err, hdrows) => {
+    
+   //db.all(`select * from historylog (MULTISET (SELECT SKIP ? FIRST ?) where Time_Stamp BETWEEN ? AND ?  `,[req.body.skip,req.body.limit,req.body.from,req.body.to],(err, hdrows) => {
+    if (err) {
+      throw err;
+    }
+    
+    res.send(hdrows);
+   
+    console.log(hdrows )
+  })
+
+});
+// defectlog table rendering
+app.post('/defectfilternextpage', (req,res) => {
+  console.log("request arrived for nextpage")
+ 
+  console.log(req.body.from)
+  console.log(req.body.to)
+  console.log(req.body.skip)
+  console.log(req.body.limit)
+  let value = (req.body.skip);
+  console.log(value);
+  // let filterdata = `select * from historylog where Sl_No BETWEEN ? AND ?`;
+  db.all(`Select * from Defectlog where Time_Stamp between ? and ? LIMIT ? OFFSET  ?`,[req.body.from,req.body.to+1,req.body.limit,value],(err, hfnrows) => {
+   
+    if (err) {
+      throw err;
+    }
+    
+    res.send(hfnrows);
+    console.log(hfnrows )
+  })
+
+});
+
+app.post('/defectfilterpreviouspage', (req,res) => {
+  console.log("request arrived for")
+ 
+  console.log(req.body.from)
+  console.log(req.body.to)
+  console.log(req.body.skip)
+  console.log(req.body.limit)
+  let value = (req.body.skip);
+  console.log(value);
+  // let filterdata = `select * from historylog where Sl_No BETWEEN ? AND ?`;
+  db.all(`Select * from Defectlog where Time_Stamp between ? and ? LIMIT ? OFFSET  ?`,[req.body.from,req.body.to+1,req.body.limit,value],(err, hfrows) => {
+   
+    if (err) {
+      throw err;
+    }
+    
+    res.send(hfrows);
+    console.log(hfrows )
+  })
+
+});
+// end
+app.post('/historyfilter', (req,res) => {
+  console.log("request arrivedf")
+ 
+  console.log(req.body.from)
+  console.log(req.body.to)
+  console.log(req.body.skip)
+  console.log(req.body.limit)
+  let value = (req.body.skip);
+  console.log(value);
+  // let filterdata = `select * from historylog where Sl_No BETWEEN ? AND ?`;
+  db.all(`select * from historylog where Time_Stamp BETWEEN ? AND ? LIMIT ? OFFSET  ?`,[req.body.from,req.body.to+1,req.body.limit,value],(err, hfrows) => {
+   
+    if (err) {
+      throw err;
+    }
+    
+    res.send(hfrows);
+    console.log(hfrows )
+  })
+
+});
+
+app.post('/historyfilternextpage', (req,res) => {
+  console.log("request arrived for nextpage")
+ 
+  console.log(req.body.from)
+  console.log(req.body.to)
+  console.log(req.body.skip)
+  console.log(req.body.limit)
+  let value = (req.body.skip);
+  console.log(value);
+  // let filterdata = `select * from historylog where Sl_No BETWEEN ? AND ?`;
+  db.all(`select * from historylog where Time_Stamp BETWEEN ? AND ? LIMIT ? OFFSET  ?`,[req.body.from,req.body.to+1,req.body.limit,value],(err, hfnrows) => {
+   
+    if (err) {
+      throw err;
+    }
+    
+    res.send(hfnrows);
+    console.log(hfnrows )
+  })
+
+});
+
+app.post('/historyfilterpreviouspage', (req,res) => {
+  console.log("request arrived for")
+ 
+  console.log(req.body.from)
+  console.log(req.body.to)
+  console.log(req.body.skip)
+  console.log(req.body.limit)
+  let value = (req.body.skip);
+  console.log(value);
+  // let filterdata = `select * from historylog where Sl_No BETWEEN ? AND ?`;
+  db.all(`select * from historylog where Time_Stamp BETWEEN ? AND ? LIMIT ? OFFSET  ?`,[req.body.from,req.body.to+1,req.body.limit,value],(err, hfrows) => {
+   
+    if (err) {
+      throw err;
+    }
+    
+    res.send(hfrows);
+    console.log(hfrows )
+  })
+
+});
+
 
   app.post('/historydaydata', (req,res) => {
-    console.log("request arrived")
-
+    console.log("request for historylog arrived")
+    console.log(req.body.from)
+    console.log(req.body.to)
+    console.log(req.body.skip)
+    console.log(req.body.limit)
+    let value = (req.body.skip);
+    console.log(value);
     // let filterdata = `select * from historylog where Sl_No BETWEEN ? AND ?`;
-    db.all(`select * from historylog where Time_Stamp BETWEEN ? AND ?`,[req.body.from,req.body.to],(err, hdrows) => {
+   db.all(`select * from historylog where Time_Stamp BETWEEN ? AND ?   LIMIT ? OFFSET  ?`,[req.body.from,req.body.to+1,req.body.limit,value],(err, hdrows) => {
       
-      console.log(req.body.from)
-      console.log(req.body.to)
+     //db.all(`select * from historylog (MULTISET (SELECT SKIP ? FIRST ?) where Time_Stamp BETWEEN ? AND ?  `,[req.body.skip,req.body.limit,req.body.from,req.body.to],(err, hdrows) => {
       if (err) {
         throw err;
       }
       
       res.send(hdrows);
-      console.log(hdrows + " data retrieved")
+     
       console.log(hdrows )
     })
 
@@ -208,7 +374,7 @@ app.post('/edit' , function(req,res){
   // defectlog table rendering
 app.post("/defectlog", (req, res) => {
   const sql3 = `Select * from Defectlog where Time_Stamp between ? and ?`;
-
+  console.log("deflog")
   db.all(sql3,[String(req.body.from),String(req.body.to)], (err, rows) => {
     if (err) {
       console.log(err);
@@ -222,6 +388,7 @@ app.post("/defectlog", (req, res) => {
 
 //marking false positive to 1
 app.post("/markfalsepositiveto1",(req,res) =>{
+  console.log("0-1")
   console.log(req.body.Sl_No) 
   let data = [1,req.body.Sl_No];//removed Sl_No
   let sql = `UPDATE Defectlog SET Mark_False_Positive = ? WHERE Sl_No = ?`;
@@ -235,6 +402,7 @@ app.post("/markfalsepositiveto1",(req,res) =>{
   });
 });
 app.post("/markfalsepositiveto0",(req,res) =>{
+  console.log("1-1")
   console.log(req.body.Sl_No)
   let data = [0,req.body.Sl_No];//removed Sl_No
   let sql = `UPDATE Defectlog SET Mark_False_Positive = ? WHERE Sl_No = ?`;
@@ -318,8 +486,12 @@ app.get("/data", (req, res) => {
   });
 });
 app.post("/data/filter",checkSignIn, (req, res) => {
+  console.log(req.body)
   let filters = [];
   let bottletypes = []
+ let {fromDate,toDate} = req.body
+ console.log(fromDate,toDate)
+
   for (const [key, value] of Object.entries(req.body)) {
     if (value) {
       filters.push(key);
@@ -351,20 +523,19 @@ app.post("/data/filter",checkSignIn, (req, res) => {
     bottletypes.push("")
   }
 
+console.log(fromDate,toDate,...bottletypes)
 
-  console.log(bottletypes)
 
   console.log(filters);
-  let sqlString = `SELECT Defect_Type,COUNT(*) as count FROM Defectlog WHERE Bottle_Type IN (?,?) AND Defect_Type IN (?,?,?) GROUP BY Defect_Type;`
-
-  db.all(sqlString,bottletypes,(err,rows)=>{
+  let sqlString = `SELECT Defect_Type,COUNT(*) as count FROM Defectlog WHERE  Time_Stamp BETWEEN ? AND ? AND Bottle_Type IN (?,?) AND Defect_Type IN (?,?,?)  GROUP BY Defect_Type;`
+  db.all(sqlString,[`${fromDate}`,`${toDate}`,...bottletypes],(err,rows)=>{
     if(err){
       console.log(err)
     }
-    res.send(rows)
+    res.send(rows) 
     console.log(rows)
   })
-  console.log(bottletypes)
+  console.log(bottletypes) 
 })
 
 app.listen(port, () => {

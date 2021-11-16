@@ -12,7 +12,13 @@ const VerticalBar = () =>{
     dataset.push(ele.count)
   })
   console.log(defectTypesAndCount)
-
+  
+  try{
+    
+  }catch(err){
+    console.error(err)
+  }
+ 
   const data = {
     labels: lables,
     datasets: [

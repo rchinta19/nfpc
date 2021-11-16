@@ -1,281 +1,201 @@
-import React ,{useState,useEffect} from 'react';
-import { useDispatch, useSelector } from "react-redux";
+import React ,{useState,useEffect} from "react";
 import Renderhistory from "./Renderhistorylog";
-import { DataGrid } from "@mui/x-data-grid";
-import axios from "axios";
-import { DatePicker } from "@mui/lab";
-import AdapterDateFns from "@mui/lab/AdapterDateFns";
-import LocalizationProvider from "@mui/lab/LocalizationProvider";
-import {TextField,Button} from "@mui/material";
-import { filterHandler } from "../../features/filter/filterSlice";
 import { TiArrowUnsorted } from "react-icons/ti";
-import PaginationItem from '@mui/material/PaginationItem';
-import { Link, MemoryRouter, Route } from 'react-router-dom';
-import Pagination from '@mui/material/Pagination';
-import { makeStyles } from '@mui/styles';
-
-function Changedata() {
-
-
-
-  function pad2(n) {
-    return (n < 10 ? '0' : '') + n;
-  }
-
-
+import { useDispatch, useSelector } from "react-redux";
+import './historylog.modules.css';
+import axios from 'axios';
+const Changedata = () =>{
   let fromdaydate = new Date().getFullYear() +  "-" +    (new Date().getMonth() + 1) +    "-" + pad2(new Date().getDate())   
-  let todaydate =  new Date().getFullYear() +  "-" +    (new Date().getMonth() + 1) +    "-" +   pad2(new Date().getDate()+1)
-    const [historydata,sethistorydata]=useState([]);
-    // const [value, setValue] = useState({ fromf: "", tof: "" });
-    const filterConditions = useSelector((state) => state.filter);
-    const [from,setfrom] = useState();
-    const [to,setto] = useState();
-    const[sample , setsample] = useState();
-    // const x = new Date()
-    // let givenDate = `${x.getMonth()+1}/${x.getDate()}/${x.getDate()}`
-    const [dates, setdates] = useState({
-      fromDate:fromdaydate,
-      toDate: todaydate,
-    });
-    // const dispatch = useDispatch();
+  let todaydate =  new Date().getFullYear() +  "-" +    (new Date().getMonth() + 1) +    "-" +   pad2(new Date().getDate())
+  const filterConditions = useSelector((state) => state.filter);
+    const [from,setfrom] = useState(fromdaydate);
+    const [to,setto] = useState(todaydate);
 
-    const applyFilterHandler = (e) => {
-   
-      axios
-    .post("/historyfilter",
-    {
-      from:from,
-      to:to,
-    } )
-    .then((res) => {
-      console.log(res.data);
-      sethistorydata(res.data)
-      // const hdf = []
-// res.data.map(ele=>{
-// hdf.push(<Renderhistory key={Math.random().toString()} hditm={ele}/>)
-// })
-// sethistorydata([...hdf])
-      
-    })
-    .catch(err=>console.log(err))  
-   setfrom("")
-   setto("")
-    };
-   
-
-
-    useEffect(()=>{ 
-      
-    axios
-    .post("/historydaydata",
-    {
-      from:dates.fromDate,
-      to:dates.toDate,
-    }
-    // dates
-    )
-    .then((res) => {
-      console.log(res.data);
-      sethistorydata(res.data)
-      // const hd = []
-// res.data.map(ele=>{
-// hd.push(<Renderhistory key={Math.random().toString()} hditm={ele}/>)
-// hd.push(res.data)
-// })
-// sethistorydata([...hd])
-      
-    })
-    .catch(err=>console.log(err))  
-    
-  },[ ])
-  const useStyles = makeStyles({
-    root: {
-      '& .super-app-theme--header': {
-        backgroundColor: 'rgba(255, 7, 0, 0.55)',
-      },
-    },
+  const [historydata, sethistorydata] = useState([]);
+  const [limit, setLimit] = useState(50);
+  const [skip, setSkip] = useState(0);
+  const [dates, setdates] = useState({
+    fromDate:fromdaydate,
+    toDate: todaydate,
   });
+  function pad2(n) {
 
-// below is sample
-const columns = [
-    {
-  
-      field: "Sl_No",  
-      headerName: "Sl_No",
-  headerClassName: 'super-app-theme--header',
-  
-      type: "number",
-  
-      width: 100,
-  
-  
-    },
-  {
-  
-        field: "User_Name",
-    
-        headerName: "User_Name",
-    headerClassName: 'super-app-theme--header',
-    
-        type: "text",
-    
-        width: 100,
-    
-      },
-   
-    {
-  
-      field: "Time_Stamp",
-  
-      headerName: "Time_Stamp",
-  headerClassName: 'super-app-theme--header',
-  
-      type: "text",
-  
-      width: 150,
-  
-    },
-  
-   
-  
-    {
-  
-      field: "Item_Modified",
-  
-      headerName: "Item_Modified",
-  headerClassName: 'super-app-theme--header',
-  
-      type: "text",
-  
-      width: 100,
-  
-    },
-  
-    {
-  
-      field: "Table_Name",
-  
-      headerName: "Table_Name",
-  headerClassName: 'super-app-theme--header',
-  
-      type: "text",
-  
-      width: 150,
-  
-    },
-  
-    {
-  
-      field: "Old_Value",
-  
-      headerName: "Old_Value",
-  headerClassName: 'super-app-theme--header',
-  
-      type: "text",
-  
-      width: 100,
-  
-    },
-  
-    {
-  
-      field: "New_Value", 
-  
-      headerName: "New_Value",
-  headerClassName: 'super-app-theme--header',
-  
-      type: "text",
-  
-      width: 100,
-  
-    },
-    
-  ];
-// above is sample
+    return (n < 10 ? '0' : '') + n;
 
-
-const classes = useStyles();
-// function getSl_No(params) {
-//   return `${params.getValue(params.id, 'Sl_No') }`}
-
-
-
-    return (
-        <>
+  }
+  
+  const nextPage = () => {
+      setSkip(skip + limit)
+      axios
+      .post("/historyfilternextpage",
+      {
+        from:from,
+        to:to,
+        skip:skip,
+        limit:limit
+      } )
+      .then((res) => {
+        console.log(res.data);
+        // sethistorydata(res.data)
+        const hdfn = []
+      res.data.map(ele=>{
+      hdfn.push(<Renderhistory key={Math.random().toString()} hditm={ele}/>)
+      })
+      sethistorydata([...hdfn])
         
-    <h1>History Logs</h1>
-          <div>
+      })
+      .catch(err=>console.log(err))  
+      // setfrom("")
+      // setto("")
+      };
+
+  
+
+  const previousPage = () => {
+      if(skip!=0){
+        setSkip(skip-limit)
+      
+      axios
+      .post("/historyfilterpreviouspage",
+      {
+        from:from,
+        to:to,
+        skip:skip,
+        limit:limit
+      } )
+      .then((res) => {
+        console.log(res.data);
+        // sethistorydata(res.data)
+        const hdfp = []
+      res.data.map(ele=>{
+      hdfp.push(<Renderhistory key={Math.random().toString()} hditm={ele}/>)
+      })
+      sethistorydata([...hdfp])
+        
+      })
+      .catch(err=>console.log(err))  
+      // setfrom("")
+      // setto("")
+      }
+      else
+      {setSkip(0)}
+    
+      };
+
+const handlehistoryinputfrom = (e) =>{
+  setfrom(e.target.value)
+  setSkip(0)
+}
+const handlehistoryinputto = (e) =>{
+  setto(e.target.value)
+  setSkip(0)
+}
+
+useEffect(()=>{ 
+      
+  axios
+  .post("/historydaydata",
+  {
+    from:from,
+    to:to,
+    skip:skip,
+    limit:limit
+  }
+  // dates
+  )
+  .then((res) => {
+    console.log(res.data);
+    // sethistorydata(res.data)
+    const hd = []
+    res.data.map(ele=>{
+hd.push(<Renderhistory key={Math.random().toString()} hditm={ele}/>)
+// hd.push(res.data)
+})
+sethistorydata([...hd])
+    
+  })
+  .catch(err=>console.log(err))  
+  
+},[skip, limit])
+
+
+const applyFilterHandler = (e) => {
+   
+  axios
+.post("/historyfilter",
+{
+  from:from,
+  to:to,
+  skip:skip,
+  limit:limit
+} )
+.then((res) => {
+  console.log(res.data);
+  // sethistorydata(res.data)
+  const hdf = []
+res.data.map(ele=>{
+hdf.push(<Renderhistory key={Math.random().toString()} hditm={ele}/>)
+})
+sethistorydata([...hdf])
+  
+})
+.catch(err=>console.log(err))  
+// setfrom("")
+// setto("")
+};
+
+
+  return(
+  <>
+   <h1>History Logs</h1>
+<div className="history-filter">
                   
 
-<input
+<input className='history-input'
 type="date"
 value={from}
 name="from"
-onChange={(e) => setfrom(e.target.value)}
+onChange={handlehistoryinputfrom}
 />
 
-<input
+<input className='history-input'
 type="date"
 name="to"
 value={to}
-onChange={(e) => setto(e.target.value)}
+onChange={handlehistoryinputto}
 />
-
-
-
-            <Button type="submit" className="submit-btn" onClick={applyFilterHandler} >
+     <button type="submit" className="history-submitbtn" onClick={applyFilterHandler} >
             Search
-          </Button>
+          </button>
           </div>
-
-
-
-        {/* <table className="table" >
+  <div  className="historytable">
+  <table >
               <thead >
                 <tr>
-                  <th className="th">
-                    Sl_No
+                  <th className="thf">
+                    S.No
                     <TiArrowUnsorted />
                     </th>
-                  <th className="th">User_Name</th>
-                  <th className="th">Time_Stamp</th>
-                  <th className="th">Item_Modified</th>
-                  <th className="th">Table_Name</th>
-                  <th className="th">Old_Value</th>
-                  <th className="th">New_Value</th>
+                  <th className="thf" >User Name</th>
+                  <th className="thf">Time Stamp</th>
+                  <th className="thf">Item Modified</th>
+                  <th className="thf">Table Name</th>
+                  <th className="thf">Old Value</th>
+                  <th className="thf">New Value</th>
                 </tr>
               </thead>
-
-              <tbody>
+               <tbody>
                 {historydata}
-               
-              </tbody>
-            </table> */}
+               </tbody>
+            </table>
+    </div>
+            <div className="pages"> 
+            <button onClick={previousPage}  className="pagebutton" > Previous Page </button>
+            <button onClick={nextPage}  className="pagebutton" > Next Page </button> 
+        </div>
 
-
-
-
-            {/* below is sample */}
-            <div style={{ height: 450, width: "100%", backgroundColor: "white" }} className={classes.root}>
-
-      <DataGrid
-          rows={historydata} 
-
-     getRowId = {(row) => row.Sl_No}
-  
-     columns={columns} 
-
-         pageSize={10} 
-        
-         rowsPerPageOptions={[10]} 
-        
-      />
-
-    </div>
-            {/* avove is sample */}
-        </>
-    )
-}
+ </>
+  );
+};
 
 export default Changedata;
-

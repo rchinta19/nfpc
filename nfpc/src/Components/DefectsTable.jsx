@@ -116,7 +116,7 @@ const columns = [
     type: "text",
     width: 130,
   },
-  {
+  { 
     field: "Bottle_Type",
     headerName: "Bottle Type",
     type: "text",
@@ -188,7 +188,7 @@ const config = {
     // axios.post('/data/filter',{filterString:"",queryParams:[]},config).then(res=>{
     //   console.log(res)
     // }).catch(err=>console.error(err))
-  }, [props.fromDate]);
+  }, [props.fromDate,ticked]);
 
  
  

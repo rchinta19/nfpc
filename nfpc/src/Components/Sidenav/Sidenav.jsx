@@ -36,7 +36,7 @@ export default function Sidenav(props) {
 
       <div>
       
-      <StyledLink  to="/homeDashboard/changedata">
+      <StyledLink  to="/homeDashboard/History">
       <MdOutlineHistoryEdu />
         
         <h3>History</h3></StyledLink >

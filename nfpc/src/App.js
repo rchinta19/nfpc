@@ -55,7 +55,7 @@ function App() {
       <Switch>
         <SecuredRoute
           path="/homeDashboard"
-          component={DashboardHome}
+          component={DashboardHome} 
           auth={isLoggedIn}
         />
         <Route to="/">

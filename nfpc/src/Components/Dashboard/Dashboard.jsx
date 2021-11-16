@@ -6,7 +6,7 @@ import PieChart from "../PieChart";
 import LineChart from "../LineChart";
 import DefectLogTables from "../DefectLogTables";
 import axios from "axios";
-import DefectsTable from '../DefectsTable'
+import DefectsTable from '../DefectLog.jsx'
 import {
   FormGroup,
   Checkbox,
@@ -24,6 +24,7 @@ import { filterHandler } from "../../features/filter/filterSlice";
 import { defectSettingHandler } from "../../features/DatesettingSlice";
 
 import "./Dashboard.modules.css";
+import { blue, green } from "@mui/material/colors";
 function Dashboard() {
   const [value, setValue] = useState({ fromd: "", tod: "" });
   const filterConditions = useSelector((state) => state.filter);
@@ -191,10 +192,18 @@ function Dashboard() {
         </Paper>
  
         <div style={{padding:"11px",display:"flex"}}>
-        <button onClick={()=>settab(true)} style={{width:"50vw",height:"5vh"}} >Graphs</button>
-<button onClick={()=>settab(false)} style={{width:"50vw",height:"5vh"}}>Defect log table</button>
-    </div>
 
+
+
+<button className="graphs" onClick={() => settab(true)}  style={ tab ? { backgroundColor:'#0f206c',width:"50vw",height:"5vh"} : {backgroundColor:'grey',width:"50vw",height:"5vh"}} >Graphs</button>
+
+
+
+<button className="defect" onClick={()=>settab(false)} style={ tab ? {backgroundColor:'grey',width:"50vw",height:"5vh"}: { backgroundColor:'#0f206c',width:"50vw",height:"5vh"} } >Defect log table</button>
+
+
+
+</div>
 
       </Grid>
 
@@ -225,9 +234,7 @@ function Dashboard() {
         </Grid>
       )}</>) : 
         <Grid xs={12}>
-          <Paper>
           <DefectsTable fromDate={checkedValues.fromDate} toDate={checkedValues.toDate}/>
-          </Paper>
         </Grid>
 
       }
