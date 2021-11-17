@@ -44,7 +44,7 @@ const config = {
 
 const DefectsTable = (props) => {
   const [totalBottleCount,settotalBottleCount] = useState([])
-  const [ticked,setticked]=useState(false)
+  const [ticked,setticked]=useState(new Array(totalBottleCount.length).fill(false))
   // const handleCellClick = (params,event)=>{
   //   // console.log(params.row.)
   //   let markValue
@@ -98,7 +98,42 @@ const checkBoxSelectionHandler = (check,sno)=>{
       }
     }
         
-        
+    const handleOnChange = (position,check,sno) => {
+      const updatedCheckedState = ticked.map((item, index) =>
+        index === position ? !item : item
+      );
+      setticked(updatedCheckedState);
+      updatedCheckedState.reduce(
+        (sum, currentState, index) => {
+          if (currentState === true) {
+            console.log("in if else")
+            axios.post("/markfalsepositiveto1",{Sl_No:sno},
+            config)
+            .then((res)=>{
+              // if (res.data) {
+              //   console.log(res);
+              //   setticked(res.data);
+              //   props.ticked(res.data);
+              // }
+                console.log(res.data)
+            })
+            return totalBottleCount[index].getSl_No;
+          }
+          else if(currentState === true){
+            axios.post("/markfalsepositiveto0",{Sl_No:sno},config)
+            .then((res)=>{
+              // if (res.data) {
+              //   console.log(res);
+              //   // props.notticked(res.data);
+              // }
+                console.log(res.data)
+              })
+        }
+          return totalBottleCount[index].getSl_No;
+        },
+      );
+    }
+      
           
           
 const columns = [
@@ -159,18 +194,16 @@ const columns = [
     type: "number",
     width: 250,
     valueGetter: getSl_No,
-   renderCell:(params)=>{
-    if(params.row.Mark_False_Positive==1){
-    return <Checkbox checked={true} onChange={(e)=>{checkBoxSelectionHandler(e.target.checked,params.id)}}  ></Checkbox>
-   }
-   else{
-    return <Checkbox checked={false} onChange={(e)=>{checkBoxSelectionHandler(e.target.checked,params.id)}}  ></Checkbox>
-
-   }
-  
+   renderCell: (cellValues) => {
+    {totalBottleCount.map((index) => {
+    return (
+      <Checkbox key={index} checked={ticked[index]} onChange={() => handleOnChange(index)} id={`custom-checkbox-${index}`}  ></Checkbox>
+    );
   }
+    );
+}
+}
   }
-
 ];
 const config = {
   headers: {

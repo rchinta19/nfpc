@@ -34,6 +34,7 @@ axios
         <h3>System Threshold </h3>
         <form className="form">
           <table className="table">
+           
             <thead>
               <tr>  
               
@@ -50,8 +51,7 @@ axios
             
             <tbody>
               {tabler}
-               
-              </tbody>
+            </tbody>
           </table>
         </form>
       </div>

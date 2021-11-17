@@ -5,21 +5,22 @@ import axios from "axios";
 
 const Table = (props) => {
   const handleEdit = () => {
-    setedit(true);
+    setedit(false);
   };
   const handleCancel = () => {
-    setedit(false);
+    setedit(true);
   };
   const save = (e) => {
     if(editvalue){
+      if(editvalue.length<=3){
     e.preventDefault();
     axios
     .post('/edit', {
-      editvalue:editvalue,
-      store:store,
-      Sl_No:props.itm.Sl_No
-           
+      editvalue:editvalue + "%",
+      Sl_No:props.itm.Sl_No,
     })
+  }
+    window.location.reload()
     // if (!newName.trim()) {
     //   return;
     // }
@@ -27,10 +28,11 @@ const Table = (props) => {
     setstore([editvalue]);
     seteditvalue("");
     setedit(false);
+  
   }
   };
 
-  const [edit, setedit] = useState(false);
+  const [edit, setedit] = useState(true);
   const [editvalue, seteditvalue] = useState();
   const [store, setstore] = useState(props.itm.Score);
 
@@ -40,43 +42,44 @@ const Table = (props) => {
       <td className="td">{props.itm.Defect}</td>
       {/* <td>{props.itm.Description}</td> */}
       <td>
-      {/* <form method="post" action="/edit"> */}
-        {edit ? (
+     
+        {edit ? (store
+          
+        ) : (
           <>
           
             <input
-              type="text"
+              type="number"
               required
               style={{width:"60px"}}
               name="phoneNumber"
-              required
+                max="100"
+               min="0"
               defaultValue={editvalue || store}
               onChange={(e) => seteditvalue(e.target.value)}
             />
             
           </>
-        ) : (
-          store
         )}
-        {/* </form> */}
+        
       </td>
       <td className="td">
-        {edit ? (
-          <div >
-            <button type="submit" 
-            onClick={save}
-            className="editbutton"
-            >
-              Save
-            </button>
-            <button type="button" onClick={handleCancel}
-            className="editbutton"
-            >
-              Cancel
-            </button>
-          </div>
-        ) : (
-          <div onClick={(event) => handleEdit(event)} style={{color:"#005FFF"}}>Edit</div>
+        {edit ? (<div onClick={(event) => handleEdit(event)} style={{color:"#005FFF"}}>Edit</div>
+         
+        ) : ( <div >
+          <button type="submit" 
+          onClick={save}
+          className="editbutton"
+          >
+            Save
+          </button>
+          <button type="button" onClick={handleCancel}
+          className="editbutton"
+          >
+            Cancel
+          </button>
+        </div>
+          
         )}
       </td>
     </tr>

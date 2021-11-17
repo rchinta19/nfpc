@@ -5,6 +5,7 @@ import System from "../System/system.js";
 // import data from "./data.json";
 import { TiArrowUnsorted } from "react-icons/ti";
 import "./model.Modules.css";
+import  tick from "./tick/tick.png";
 
 const Modelstatuslist = (props) => {
   // const [contacts, setContacts] = useState(data);
@@ -55,8 +56,8 @@ const Modelstatuslist = (props) => {
   // };
 
   // the below code is for data base
-  const [mstatus, setmstatus] = useState();
-
+  const [mstatus, setmstatus] = useState([]);
+ 
   useEffect(() => {
     axios
       .get("/status")
@@ -67,25 +68,28 @@ const Modelstatuslist = (props) => {
         res.data.map((ele) => {
           x.push(<Render key={Math.random().toString()} itm={ele} />);
         });
-        setmstatus([...x]);
+       setmstatus(...x)
+        // console.log(res.data)
       })
       .catch((err) => console.log(err));
   }, []);
   // the above code is for data base
 
-
+ 
 
 
   const getReqHandler = ()=>{
     axios
   .get('/status')
   .then(res=> {
+ 
   
   const x = []
   res.data.map(ele=>{
     x.push(<Render key={Math.random().toString()}itm={ele}/>)
   })
   setmstatus([...x])
+ 
   })
   .catch(err=>console.log(err))  
   
@@ -118,6 +122,7 @@ const Modelstatuslist = (props) => {
         const formData = new FormData();
         formData.append('file', file[i])
         formData.append('value',value)
+        formData.append('version',version)
         console.log(file)
         axios.post('/uploadfile', formData, {
          
@@ -127,29 +132,25 @@ const Modelstatuslist = (props) => {
             }
         }).then(res => {
             console.log(res);
-            // getFile({ name: res.data.name, path: 'http://localhost:5000' + res.data.path })
-            alert("file is uploaded")
-             setDisplay(true);
-            // el.current.value = "";
-            axios
-            .post('/upload', {
-              value:value,
-              version:version,
-                   
-            })
-            // window.location.reload();
+            setDisplay(true);
+            
+             })
+            window.location.reload();
             // setDisplay(false);
-        })
-        .catch(err => {console.log(err)
-        alert("file is not uploaded")
-        alert(err)
-        })
-      }
-    }
-  }
+        }
+       
+  
+          }
+        }
+
+   useEffect(()=>{
+
+    getReqHandler()
+   
+    },[display])
 // above file upload
 
-  
+
 
   
 
@@ -158,6 +159,8 @@ const Modelstatuslist = (props) => {
   return (
     <>
       <div className="div-configpage">
+      {/* {itm.Sl_No } */}
+      {/* {mrstatus.Sl_No} */}
         <h1>SYSTEM CONFIGURATION </h1>
         <div className="div-model-1">
           <div className="tablecontainer">
@@ -176,13 +179,12 @@ const Modelstatuslist = (props) => {
                     <th className="th">Status</th>
                   </tr>
                 </thead>
-
                 <tbody>
-                  {mstatus}
-                  {/* {contacts.map((contact, index) => {
-                  return <Render contact={contact} sno={+index} />;
-                })} */}
-                </tbody>
+          { mstatus}
+          </tbody>
+         
+     
+    
               </table>
             </form>
           </div>
@@ -214,7 +216,7 @@ const Modelstatuslist = (props) => {
                   // onChange={(e) => addchange(e)}
                   onChange={(e) => setvalue(e.target.value)}
                   value={value}
-                  maxlength="20"
+                  maxlength="15"
                 />
               </div>
               <div className="config-uploadmodel">
@@ -227,7 +229,7 @@ const Modelstatuslist = (props) => {
                   type="text"
                   name="version"
                   placeholder="Enter a Version..."
-                  // required="true"
+                  maxlength="8"
                   required
                   // className="configinput"
                   // onChange={handleAddFormChange}
@@ -245,7 +247,7 @@ const Modelstatuslist = (props) => {
                   <label htmlFor="fileInput">
                     <input
                       type="text"
-                      value={file.name}
+                      value={file.length +  " files selected"}
                       placeholder="No file choosen"
                       // className="configbrowse"
                       className="select"
@@ -306,11 +308,11 @@ const Modelstatuslist = (props) => {
               <div className="abcdef">
                 <img
                   className="sucesslogo"
-                  src="./tick/tick@2x.png"
-                  alt="logo"
+                  src={tick}
+                 
                 />
                 <div className="sucesstext">
-                  {" "}
+                
                   Model has been uploaded successfully.
                 </div>
               </div>

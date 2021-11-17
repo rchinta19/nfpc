@@ -77,6 +77,7 @@ const checkBoxSelectionHandler = (check,sno)=>{
   
   const nextPage = () => {
       setSkip(skip + limit)
+      try{
       axios
       .post("/defectfilternextpage",
       {
@@ -98,8 +99,10 @@ const checkBoxSelectionHandler = (check,sno)=>{
       .catch(err=>console.log(err))  
       // setfrom("")
       // setto("")
-      };
-
+      }catch(err){
+        console.log(err)
+      }
+    }
   
 
   const previousPage = () => {

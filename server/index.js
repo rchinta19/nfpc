@@ -144,39 +144,52 @@ if (!fs.existsSync(folder)){
   if (!req.files) {
     console.log("failed");
       return res.status(500).send({ msg: "file is not found" })
+     
   }
   const File=req.files.file;
   console.log(req.body.value)
+  console.log(req.body.version)
   console.log(req.files.file)
-  console.log(folder)
+  // console.log(folder)
   console.log("request arrived for files upload");
+  let Path=`${__dirname}/${folder}/${File.name}`
+  console.log(Path)
+  let date = new Date().getDate() +  "/" +    (new Date().getMonth() + 1) +    "/" +    new Date().getFullYear()
  // Use the mv() method to place the file somewhere on your server
-  File.mv(`${__dirname}/${folder}/${File.name}`, function (err) {
+  File.mv(`${Path}`, function (err) {
       if (err) {
           console.log(err)
           return res.status(500).send({ msg: "error" });
-      }
+      }else{
+        db.run(`insert into Modelstatuslist(Model,Version,Last_Update,Status,File_Path) values(?,?,?,"inactive",?)`,[req.body.value,req.body.version,date,`${Path}`], function(err,uploadata) {
+          console.log("model statuslist is updated")
+          res.send()
+        })
       return res.send({ file: File.name, path: `/${File}`, ty: File.type });
+      }
   });
 })
-// above is for upload model
 
-// upload data in model status in below
-app.post('/upload', function (req,res) {
 
-  let date = new Date().getDate() +  "/" +    (new Date().getMonth() + 1) +    "/" +    new Date().getFullYear()
-  
-  db.run(`insert into Modelstatuslist(Model,Version,Last_Update,Status) values(?,?,?,"inactive")`,[req.body.value,req.body.version,date], function(err,uploadata) {
-    if (err) {
-      return console.log(err.message);
-    }
+ 
+
+
+  app.post("/updatestatus" , (req,res) =>{
+ console.log ("request arrived for active status")
+  console.log(req.body.Sl_No)
+  db.serialize(function(){
+  db.all(`UPDATE Modelstatuslist  SET Status = ? WHERE Sl_No >=1 `,["Inactive"])
+  db.all(`UPDATE Modelstatuslist  SET Status = ? WHERE Sl_No = ? `,["Active",req.body.Sl_No])
+  db.all(`select * from Modelstatuslist`,function(err,statusrows){
+  console.log ("model status is updated as active")
+    res.send(statusrows)
+    console.log(statusrows)
+  }
+  )}
+  );
+
     
-    if(uploadata){
-   return console.log(uploadata);
-    }
-  //  res.send();
-  });
-  });
+    });
   // upload data in model status in above
 // Harsha Update
 app.post('/historyfilter', (req,res) => {
@@ -206,16 +219,16 @@ app.post('/defectlogdaydata', (req,res) => {
   let value = (req.body.skip);
   console.log(value);
   // let filterdata = `select * from historylog where Sl_No BETWEEN ? AND ?`;
- db.all(`select * from Defectlog where Time_Stamp BETWEEN ? AND ?   LIMIT ? OFFSET  ?`,[req.body.from,req.body.to,req.body.limit,value],(err, hdrows) => {
+ db.all(`select * from Defectlog where Time_Stamp BETWEEN ? AND ?   LIMIT ? OFFSET  ?`,[req.body.from,req.body.to,req.body.limit,value],(err, dlrows) => {
     
    //db.all(`select * from historylog (MULTISET (SELECT SKIP ? FIRST ?) where Time_Stamp BETWEEN ? AND ?  `,[req.body.skip,req.body.limit,req.body.from,req.body.to],(err, hdrows) => {
     if (err) {
       throw err;
     }
     
-    res.send(hdrows);
+    res.send(dlrows);
    
-    console.log(hdrows )
+    console.log(dlrows )
   })
 
 });
@@ -230,14 +243,14 @@ app.post('/defectfilternextpage', (req,res) => {
   let value = (req.body.skip);
   console.log(value);
   // let filterdata = `select * from historylog where Sl_No BETWEEN ? AND ?`;
-  db.all(`Select * from Defectlog where Time_Stamp between ? and ? LIMIT ? OFFSET  ?`,[req.body.from,req.body.to+1,req.body.limit,value],(err, hfnrows) => {
+  db.all(`Select * from Defectlog where Time_Stamp BETWEEN ? and ? LIMIT ? OFFSET  ?`,[req.body.from,req.body.to+1,req.body.limit,value],(err, dlnrows) => {
    
     if (err) {
       throw err;
     }
     
-    res.send(hfnrows);
-    console.log(hfnrows )
+    res.send(dlnrows);
+    console.log(dlnrows )
   })
 
 });
@@ -252,14 +265,14 @@ app.post('/defectfilterpreviouspage', (req,res) => {
   let value = (req.body.skip);
   console.log(value);
   // let filterdata = `select * from historylog where Sl_No BETWEEN ? AND ?`;
-  db.all(`Select * from Defectlog where Time_Stamp between ? and ? LIMIT ? OFFSET  ?`,[req.body.from,req.body.to+1,req.body.limit,value],(err, hfrows) => {
+  db.all(`Select * from Defectlog where Time_Stamp BETWEEN ? and ? LIMIT ? OFFSET  ?`,[req.body.from,req.body.to+1,req.body.limit,value],(err, dlfrows) => {
    
     if (err) {
       throw err;
     }
     
-    res.send(hfrows);
-    console.log(hfrows )
+    res.send(dlfrows);
+    console.log(dlfrows )
   })
 
 });
@@ -356,10 +369,10 @@ app.post('/historyfilterpreviouspage', (req,res) => {
   //end 
 // edit data in system thershold in below
 app.post('/edit' , function(req,res){
-  let data = [req.body.editvalue,req.body.Sl_No];
+  let data = [req.body.editvalue ,req.body.Sl_No];
   let sql = `UPDATE SystemThreshold SET Score = ? WHERE Sl_No = ?`;
 
-    db.run(sql, data, function(err,edit){
+    db.all(sql, data, function(err,edit){
     if (err) {
       return console.error(err.message);
     }
