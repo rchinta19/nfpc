@@ -1,31 +1,24 @@
 import React ,{useState,useEffect} from "react";
-import Renderhistory from "./Renderdefectlog";
+import Renderdefectlog from "./Renderdefectlog";
 import { TiArrowUnsorted } from "react-icons/ti";
 import { useDispatch, useSelector } from "react-redux";
 import './Defectlog.modules.css';
 
 import axios from 'axios';
 const Defectlog = (props) =>{
-//   let fromdaydate = new Date().getFullYear() +  "-" +    (new Date().getMonth() + 1) +    "-" + pad2(new Date().getDate())   
-//   let todaydate =  new Date().getFullYear() +  "-" +    (new Date().getMonth() + 1) +    "-" +   pad2(new Date().getDate()+1)
-  const filterConditions = useSelector((state) => state.filter);
-    // const [from,setfrom] = useState(fromdaydate);
-    // const [to,setto] = useState(todaydate);
 
-//   const [historydata, sethistorydata] = useState([]);
+  const filterConditions = useSelector((state) => state.filter);
+
   const [limit, setLimit] = useState(10);
   const [skip, setSkip] = useState(0);
   const [totalBottleCount,settotalBottleCount] = useState([])
   const [ticked,setticked]=useState(false)
-//   const [dates, setdates] = useState({
-//     fromDate:fromdaydate,
-//     toDate: todaydate,
-//   });
-//   function pad2(n) {
 
-//     return (n < 10 ? '0' : '') + n;
+  function pad2(n) {
 
-//   }
+    return (n < 10 ? '0' : '') + n;
+
+  }
 const config = {
   headers: {
     "Access-Control-Allow-Origin": "*",
@@ -34,7 +27,7 @@ const config = {
 };
 const checkBoxSelectionHandler = (check,sno)=>{
   
-        console.log(check)
+        console.log(check + "hai")
         console.log(sno)
         let checkCondition = check
         if(checkCondition==0){
@@ -57,7 +50,7 @@ const checkBoxSelectionHandler = (check,sno)=>{
             // if (res.data) {
             //   console.log(res);
             //   // props.notticked(res.data);
-            // 
+            
               console.log(res.data)
              
             })
@@ -65,15 +58,7 @@ const checkBoxSelectionHandler = (check,sno)=>{
 
       }
     }
-  //  const renderCell = (params)=>{
-  //     if(params.row.Mark_False_Positive==1){
-  //     return <input type="checkbox" checked onChange={(e)=>{checkBoxSelectionHandler(e.target.checked,params.id)}}  />
-  //    }
-  //    else{
-  //     return <input type="checkbox"  onChange={(e)=>{checkBoxSelectionHandler(e.target.checked,params.id)}}  />
-  
-  //    }
-  //   }
+ 
   
   const nextPage = () => {
       setSkip(skip + limit)
@@ -89,11 +74,11 @@ const checkBoxSelectionHandler = (check,sno)=>{
       .then((res) => {
         console.log(res.data);
         // sethistorydata(res.data)
-        const hdfn = []
+        const dlfn = []
       res.data.map(ele=>{
-      hdfn.push(<Renderhistory key={Math.random().toString()} hditm={ele}/>)
+      dlfn.push(<Renderdefectlog key={Math.random().toString()} dlitm={ele}/>)
       })
-      settotalBottleCount([...hdfn])
+      settotalBottleCount([...dlfn])
         
       })
       .catch(err=>console.log(err))  
@@ -119,31 +104,19 @@ const checkBoxSelectionHandler = (check,sno)=>{
       } )
       .then((res) => {
         console.log(res.data);
-        // sethistorydata(res.data)
-        const hdfp = []
+        const dffp = []
       res.data.map(ele=>{
-      hdfp.push(<Renderhistory key={Math.random().toString()} hditm={ele}/>)
+      dffp.push(<Renderdefectlog key={Math.random().toString()} dlitm={ele}/>)
       })
-      settotalBottleCount([...hdfp])
+      settotalBottleCount([...dffp])
         
       })
       .catch(err=>console.log(err))  
-      // setfrom("")
-      // setto("")
       }
       else
       {setSkip(0)}
-    
       };
 
-// const handlehistoryinputfrom = (e) =>{
-//   setfrom(e.target.value)
-//   setSkip(0)
-// }
-// const handlehistoryinputto = (e) =>{
-//   setto(e.target.value)
-//   setSkip(0)
-// }
 
 useEffect(()=>{ 
       
@@ -160,12 +133,12 @@ useEffect(()=>{
   .then((res) => {
     console.log(res.data);
     // sethistorydata(res.data)
-    const hd = []
+    const ld = []
     res.data.map(ele=>{
-hd.push(<Renderhistory key={Math.random().toString()} hditm={ele} selectHandler={checkBoxSelectionHandler} checkValue={ele.Mark_False_Positive} />)
+ld.push(<Renderdefectlog key={Math.random().toString()} dlitm={ele} selectHandler={checkBoxSelectionHandler} checkValue={ele.Mark_False_Positive} />)
 
 })
-settotalBottleCount([...hd])
+settotalBottleCount([...ld])
     
   })
   .catch(err=>console.log(err))  
@@ -173,54 +146,10 @@ settotalBottleCount([...hd])
 },[skip, limit,props.fromDate,ticked])
 
 
-// const applyFilterHandler = (e) => {
-   
-//   axios
-// .post("/historyfilter",
-// {
-//   from:from,
-//   to:to,
-//   skip:skip,
-//   limit:limit
-// } )
-// .then((res) => {
-//   console.log(res.data);
-//   // sethistorydata(res.data)
-//   const hdf = []
-// res.data.map(ele=>{
-// hdf.push(<Renderhistory key={Math.random().toString()} hditm={ele}/>)
-// })
-// sethistorydata([...hdf])
-  
-// })
-// .catch(err=>console.log(err))  
-// // setfrom("")
-// // setto("")
-// };
-
   return(
   <>
    <h1>Recent Defect logs</h1>
-{/* <div className="history-filter">
-                  
 
-<input className='history-input'
-type="date"
-value={from}
-name="from"
-onChange={handlehistoryinputfrom}
-/>
-
-<input className='history-input'
-type="date"
-name="to"
-value={to}
-onChange={handlehistoryinputto}
-/>
-     <button type="submit" className="history-submitbtn" onClick={applyFilterHandler} >
-            Search
-          </button>
-          </div> */}
   <div  className="historytable">
   <table >
               <thead >

@@ -31,7 +31,7 @@ function Dashboard() {
   const [checkBox, setCheckBox] = useState(false)
   const [tab, settab] = useState(true)
   const x = new Date()
-  let givenDate = `${x.getFullYear()}-${x.getMonth()+1}-${x.getDate()}`
+  let givenDate = `${pad2(x.getFullYear())}-${pad2(x.getMonth()+1)}-${pad2(x.getDate())}`
   const [checkedValues, setCheckedValues] = useState({
     fromDate:givenDate,
     toDate: givenDate,
@@ -43,7 +43,11 @@ function Dashboard() {
     All: false,
   });
  
- 
+  function pad2(n) {
+
+    return (n < 10 ? '0' : '') + n;
+
+  }
  
   const defectTypes_Count = useSelector((state) => state.dataset.typeA);
   console.log(defectTypes_Count);
@@ -101,7 +105,7 @@ function Dashboard() {
                   setValue((prev) => {
                     return { ...prev, fromd: value };
                   });
-                  setCheckedValues({ ...checkedValues, fromDate:`${value.getFullYear()}-${value.getMonth()+1}-${value.getDate()}` });
+                  setCheckedValues({ ...checkedValues, fromDate:`${pad2(value.getFullYear())}-${pad2(value.getMonth()+1)}-${pad2(value.getDate())}` });
                 }}
                 renderInput={(params) => <TextField {...params} />}
               />
@@ -113,7 +117,7 @@ function Dashboard() {
                   setValue((prev) => {
                     return { ...prev, tod: value };
                   });
-                  setCheckedValues({ ...checkedValues, toDate:`${value.getFullYear()}-${value.getMonth()+1}-${value.getDate()}`});
+                  setCheckedValues({ ...checkedValues, toDate:`${pad2(value.getFullYear())}-${pad2(value.getMonth()+1)}-${pad2(value.getDate())}`});
                 }}
                 renderInput={(params) => <TextField {...params} />}
               />

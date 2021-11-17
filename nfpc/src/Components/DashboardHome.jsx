@@ -227,6 +227,7 @@ console.log(User)
               onClick={(e) => {
                 LogoutHandler();
                 localStorage.clear()
+                window.location.reload()
               }} 
               className={classes.IconStyles + ` icon-not`}>Logout
            </Button>

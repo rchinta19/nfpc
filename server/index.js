@@ -27,7 +27,7 @@ app.use(sessions({
 }))
 
 let session
-const db = new sqlite3.Database("./db/nfpcf.db", (err) => {
+const db = new sqlite3.Database("./db/nfpc3.db", (err) => {
   if (err) {
     console.log(err);
   }
@@ -83,6 +83,7 @@ const checkSignIn = (req,res,next)=>{
 
   }
 }
+
 app.get('/logout',function(req,res){
   console.log(req.session.page_views)
   const d = new Date()
@@ -410,7 +411,7 @@ app.post("/markfalsepositiveto1",(req,res) =>{
     if (err) {
       return console.error(err.message);
     }
-   return ;
+   res.send(edit) ;
   
   });
 });
@@ -424,7 +425,7 @@ app.post("/markfalsepositiveto0",(req,res) =>{
     if (err) {
       return console.error(err.message);
     }
-   return ;
+    res.send(edit);
   
   });
 });
