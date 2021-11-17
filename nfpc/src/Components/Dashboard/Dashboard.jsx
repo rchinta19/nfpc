@@ -31,7 +31,7 @@ function Dashboard() {
   const [checkBox, setCheckBox] = useState(false)
   const [tab, settab] = useState(true)
   const x = new Date()
-  let givenDate = `${pad2(x.getFullYear())}-${pad2(x.getMonth()+1)}-${pad2(x.getDate())}`
+  let givenDate = `${x.getFullYear()}-${x.getMonth()+1}-${pad2(x.getDate())}`
   const [checkedValues, setCheckedValues] = useState({
     fromDate:givenDate,
     toDate: givenDate,
@@ -105,7 +105,7 @@ function Dashboard() {
                   setValue((prev) => {
                     return { ...prev, fromd: value };
                   });
-                  setCheckedValues({ ...checkedValues, fromDate:`${pad2(value.getFullYear())}-${pad2(value.getMonth()+1)}-${pad2(value.getDate())}` });
+                  setCheckedValues({ ...checkedValues, fromDate:`${value.getFullYear()}-${value.getMonth()+1}-${pad2(value.getDate())}` });
                 }}
                 renderInput={(params) => <TextField {...params} />}
               />
@@ -117,7 +117,7 @@ function Dashboard() {
                   setValue((prev) => {
                     return { ...prev, tod: value };
                   });
-                  setCheckedValues({ ...checkedValues, toDate:`${pad2(value.getFullYear())}-${pad2(value.getMonth()+1)}-${pad2(value.getDate())}`});
+                  setCheckedValues({ ...checkedValues, toDate:`${value.getFullYear()}-${value.getMonth()+1}-${pad2(value.getDate())}`});
                 }}
                 renderInput={(params) => <TextField {...params} />}
               />

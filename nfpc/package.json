@@ -31,6 +31,12 @@
     "styled-components": "^5.3.3",
     "web-vitals": "^1.1.2"
   },
+  "alias": {
+    "react": "preact/compat",
+    "react-dom/test-utils": "preact/test-utils",
+    "react-dom": "preact/compat",
+    "react/jsx-runtime": "preact/jsx-runtime"
+  },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
