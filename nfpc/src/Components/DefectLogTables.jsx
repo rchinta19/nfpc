@@ -85,10 +85,15 @@ const rows = [
 
 export default function DefectLogTables() {
   const [totalBottleCount,settotalBottleCount] = useState()
+  let totalCount=0
   const  tbData =  useSelector((state) => state.dataset.typeA) 
-  
- 
-  let x = {totalbootles:200,id:1}
+  for( let [key,value] of Object.entries(tbData)){
+    if(key=="Count"){
+    totalCount+= +value
+  }
+  }
+  console.log(totalCount)
+  let x = {totalbootles:totalCount,id:1}
  for(const ele of tbData){
  x = {...x,[ele.Defect_Type]:ele.count,totalbootles:x.totalbootles+ele.count}
     

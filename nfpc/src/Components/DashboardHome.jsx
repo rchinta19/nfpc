@@ -73,9 +73,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 function DashboardHome(props) {
   const dispatch = useDispatch()
-console.log(props.location)
-console.log(props.match)
-console.log(props.history)
+
   const classes = useStyles();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const LogoutHandler = () => {
@@ -198,13 +196,14 @@ console.log(User)
         <Typography variant="h5" component="h2" style={header}>Change Password</Typography>
         <FormControl variant="standard" style={{width:"250px",padding:"2px"}}>
         <InputLabel htmlFor="component-simple">Enter Current Password</InputLabel>
-        <Input id="component-simple" value={name} onChange={handleChange} />
+        <Input  type="password" id="component-simple" value={name} onChange={handleChange} />
       </FormControl>
       <FormControl variant="standard" style={{width:"250px",padding:"2px"}}>
         <InputLabel htmlFor="component-helper">Enter New Password</InputLabel>
         <Input
           id="component-helper"
           value={Newpassword}
+          type="password"
           onChange={handlenewpassword}
           aria-describedby="Enter New Password"
         />
@@ -213,6 +212,7 @@ console.log(User)
         <InputLabel htmlFor="component-helper">Re-Enter New Password</InputLabel>
         <Input
           id="component-helper"
+          type="password"
           value={reenternewpassword}
           onChange={handlereenterpassword}
           aria-describedby="Re-Enter New Password"
