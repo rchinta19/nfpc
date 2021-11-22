@@ -9,7 +9,7 @@ const loggingSlice = createSlice({
     reducers:{
         LoggingUser:(state,action)=>{
             return {
-                ...state,UserPresent:action.payload.UserPresent,currentPath:action.payload.path
+                ...state,UserPresent:action.payload.UserPresent,UserName:action.payload.UserName,currentPath:action.payload.path,
             }
         },
 

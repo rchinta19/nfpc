@@ -20,9 +20,11 @@
   width:14px;
 }
 .checks {
-  display: flex !important;
+  /* display: flex !important; */
   flex-direction: row;
   display:block;
+  font-size: 1.2rem;
+  font-weight: bold;
 }
 .css-1u3bzj6-MuiFormControl-root-MuiTextField-root{
 margin:0px 10px !important;

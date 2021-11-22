@@ -65,15 +65,29 @@ const Login = (props) => {
       )
       .then((res) => {
         console.log(res)
-        if (res.data) {
+        if (res.data==true) {
          localStorage.setItem("userPresent",res.data)
+         localStorage.setItem("UserName",email)
 
-         dispatch(LoggingUser({UserPresent:res.data,path:"/homeDashboard/Dashboard"}))
+         dispatch(LoggingUser({UserPresent:res.data,path:"/homeDashboard/Dashboard",UserName:email}))
          
+        }
+        else if(res.data==false){
+          console.log("Invalid User Credentials")
         }
       });
   };
  
+ 
+// const hai = (e) => {​​  
+//   console.log("requested fot forgot password")     
+//   alert("Please contact Administrator")
+// }​​
+
+
+
+
+
   //   .catch(error =>
   //     { console.error(`invalid credentials`)
   // });
@@ -136,7 +150,7 @@ const Login = (props) => {
                 <input className="checkbox" type="checkbox" name="remember" />
                 <label for="checkbox">Remember Me</label>
               </a>
-              <a href="#">Forgot password?</a>
+              <a href="#" >Forgot password?</a>
             </div>
 
             <button

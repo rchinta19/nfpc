@@ -40,6 +40,7 @@ import FormControl from '@mui/material/FormControl';
 import Input from '@mui/material/Input';
 import InputLabel from '@mui/material/InputLabel';
 import { fontWeight } from "@mui/system";
+import CloseIcon from '@mui/icons-material/Close';
 // import OutlinedInput from '@mui/material/OutlinedInput';
 // import { typography } from "@mui/system";
 
@@ -75,9 +76,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 function DashboardHome(props) {
   const dispatch = useDispatch()
-console.log(props.location)
-console.log(props.match)
-console.log(props.history)
+
   const classes = useStyles();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const LogoutHandler = () => {
@@ -198,16 +197,18 @@ console.log(User)
       sx={style}
       noValidate
       autoComplete="off">
+        <button onClick={(e)=>setOpen(false)} style={{float: "right",color:"red"}}> <CloseIcon  /> </button>
         <Typography variant="h5" component="h2" style={header}>Change Password</Typography>
         <FormControl variant="standard" style={{width:"250px",padding:"2px"}}>
         <InputLabel htmlFor="component-simple">Enter Current Password</InputLabel>
-        <Input id="component-simple" value={name} onChange={handleChange} />
+        <Input  type="password" id="component-simple" value={name} onChange={handleChange} />
       </FormControl>
       <FormControl variant="standard" style={{width:"250px",padding:"2px"}}>
         <InputLabel htmlFor="component-helper">Enter New Password</InputLabel>
         <Input
           id="component-helper"
           value={Newpassword}
+          type="password"
           onChange={handlenewpassword}
           aria-describedby="Enter New Password"
         />
@@ -216,6 +217,7 @@ console.log(User)
         <InputLabel htmlFor="component-helper">Re-Enter New Password</InputLabel>
         <Input
           id="component-helper"
+          type="password"
           value={reenternewpassword}
           onChange={handlereenterpassword}
           aria-describedby="Re-Enter New Password"
@@ -230,6 +232,7 @@ console.log(User)
               onClick={(e) => {
                 LogoutHandler();
                 localStorage.clear()
+                window.location.reload()
               }} 
               className={classes.IconStyles + ` icon-not`}>Logout
            </Button>
@@ -251,7 +254,7 @@ console.log(User)
           <Route path="/homeDashboard/Configuration">
             <Modelstatuslist />
           </Route>
-          <Route path="/homeDashboard/History">
+          <Route path="/homeDashboard/Change History">
             <Changedata />
           </Route>
 

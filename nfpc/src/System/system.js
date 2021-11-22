@@ -39,7 +39,7 @@ axios
               <tr>  
               
                 <th className="th">
-                  Sno
+                  S.no
                   <TiArrowUnsorted /> 
                 </th>
                 <th className="th">Scratches</th>

@@ -1,9 +1,13 @@
 import React ,{useState,useEffect} from "react";
 import Renderhistory from "./Renderhistorylog";
 import { TiArrowUnsorted } from "react-icons/ti";
+import { DatePicker } from "@mui/lab";
+import AdapterDateFns from "@mui/lab/AdapterDateFns";
+import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import { useDispatch, useSelector } from "react-redux";
 import './historylog.modules.css';
 import axios from 'axios';
+import { TextField } from "@material-ui/core";
 const Changedata = () =>{
   let fromdaydate = new Date().getFullYear() +  "-" +    (new Date().getMonth() + 1) +    "-" + pad2(new Date().getDate())   
   let todaydate =  new Date().getFullYear() +  "-" +    (new Date().getMonth() + 1) +    "-" +   pad2(new Date().getDate())
@@ -82,14 +86,14 @@ const Changedata = () =>{
     
       };
 
-const handlehistoryinputfrom = (e) =>{
-  setfrom(e.target.value)
-  setSkip(0)
-}
-const handlehistoryinputto = (e) =>{
-  setto(e.target.value)
-  setSkip(0)
-}
+// const handlehistoryinputfrom = (e) =>{
+//   setfrom(e.target.value)
+//   setSkip(0)
+// }
+// const handlehistoryinputto = (e) =>{
+//   setto(e.target.value)
+//   setSkip(0)
+// }
 
 useEffect(()=>{ 
       
@@ -144,26 +148,62 @@ sethistorydata([...hdf])
 // setto("")
 };
 
-
+console.log(from)
+console.log(to)
   return(
   <>
    <h1>History Logs</h1>
 <div className="history-filter">
-                  
 
+<LocalizationProvider dateAdapter={AdapterDateFns}>
+<DatePicker
+               
+                label="From Date"
+                value={from}
+                className="dtpicker"
+                onChange={(newvalue)=>{
+                  setfrom(newvalue)
+                  setSkip(0)
+                  setfrom((newvalue)=>{return `${newvalue.getFullYear()}-${newvalue.getMonth()+1}-${pad2(newvalue.getDate())}`})
+                }}
+                renderInput={(params) => <TextField 
+                  variant="outlined"
+                  id="outlined-basic"
+                  className="history-input" 
+                  {...params} />}
+                
+              /> 
+                       
+{/* 
 <input className='history-input'
 type="date"
 value={from}
 name="from"
 onChange={handlehistoryinputfrom}
-/>
-
+/> */}
+<DatePicker
+                label="To Date"
+                value={to}
+                className="dtpicker"
+                onChange={(newvalue)=>{setto(newvalue)
+                  setSkip(0)
+                  setto((newvalue)=>{return `${newvalue.getFullYear()}-${newvalue.getMonth()+1}-${pad2(newvalue.getDate())}`})
+                }}
+                renderInput={(params) => <TextField 
+                  className="history-input"
+                  variant="outlined"
+                  id="outlined-basic"
+                  {...params} />}
+              />
+  </LocalizationProvider>
+  
+{/* 
 <input className='history-input'
 type="date"
 name="to"
 value={to}
 onChange={handlehistoryinputto}
-/>
+/> */}
      <button type="submit" className="history-submitbtn" onClick={applyFilterHandler} >
             Submit
           </button>

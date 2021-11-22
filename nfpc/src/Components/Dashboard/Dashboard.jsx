@@ -26,13 +26,13 @@ import { defectSettingHandler } from "../../features/DatesettingSlice";
 import "./Dashboard.modules.css";
 // import { blue, green } from "@mui/material/colors";
 function Dashboard() {
-  let User =useSelector((state)=>state.userLog.UserName)
-  const [value, setValue] = useState({ fromd: "", tod: "" });
   const filterConditions = useSelector((state) => state.filter);
   // const [checkBox, setCheckBox] = useState(false)
   const [tab, settab] = useState(true)
   const x = new Date()
   let givenDate = `${x.getFullYear()}-${x.getMonth()+1}-${x.getDate()}`
+  const [value, setValue] = useState({ fromd: givenDate, tod: givenDate });
+  let User =useSelector((state)=>state.userLog.UserName)
   const [checkedValues, setCheckedValues] = useState({
     fromDate:givenDate,
     toDate: givenDate,
@@ -44,7 +44,11 @@ function Dashboard() {
     All: false,
   });
  
- 
+  function pad2(n) {
+
+    return (n < 10 ? '0' : '') + n;
+
+  }
  
   const defectTypes_Count = useSelector((state) => state.dataset.typeA);
   console.log(defectTypes_Count);
@@ -99,25 +103,29 @@ function Dashboard() {
               <DatePicker
               className="dtpicker"
                 label="From Date"
-                value={checkedValues.fromDate}
+                value={value.fromd}
                 sx={{ backgroundColor: "black" }}
                 onChange={(value) => {
                   setValue((prev) => {
                     return { ...prev, fromd: value };
                   });
-                  setCheckedValues({ ...checkedValues, fromDate:`${value.getFullYear()}-${value.getMonth()+1}-${value.getDate()}` });
+                  setCheckedValues({ ...checkedValues, fromDate:`${value.getFullYear()}-${value.getMonth()+1}-${pad2(value.getDate()-1)}` });
+                  setValue((prev)=>{return {fromd:`${value.getFullYear()}-${value.getMonth()+1}-${value.getDate()}`,...prev}})
+
                 }}
                 renderInput={(params) => <TextField {...params} />}
               />
               <DatePicker
                 label="To Date"
-                value={checkedValues.toDate}
+                value={value.tod}
                 className="dtpicker"
                 onChange={(value) => {
                   setValue((prev) => {
                     return { ...prev, tod: value };
                   });
-                  setCheckedValues({ ...checkedValues, toDate:`${value.getFullYear()}-${value.getMonth()+1}-${value.getDate()}`});
+                  setCheckedValues({ ...checkedValues, toDate:`${value.getFullYear()}-${value.getMonth()+1}-${pad2(value.getDate()+1)}`});
+                  setValue((prev)=>{return {tod:`${value.getFullYear()}-${value.getMonth()+1}-${value.getDate()}`,...prev}})
+
                 }}
                 renderInput={(params) => <TextField {...params} />}
               />
@@ -127,7 +135,7 @@ function Dashboard() {
             Bottle Types
             <div>
             <FormControlLabel
-              control={<Checkbox color="secondary" />}
+              control={<Checkbox  />}
               label="TypeA"
               onChange={(e) => {
                 setCheckedValues((prev) => {
@@ -178,16 +186,7 @@ function Dashboard() {
                 });
               }}
             />
-            <FormControlLabel
-              control={<Checkbox />}
-              label="All"
-              onChange={(e) => {
-                console.log("clicked");
-                setCheckedValues((prev) => {
-                  return { ...prev, All: e.target.value };
-                });
-              }}
-            />
+            
             </div>
           </FormGroup>
           <Button type="submit" className="history-submitbtn" onClick={applyFilterHandler} >
@@ -199,11 +198,11 @@ function Dashboard() {
 
 
 
-<button className="graphs" onClick={() => settab(true)}  style={ tab ? { backgroundColor:'#0f206c',width:"50vw",height:"5vh"} : {backgroundColor:'grey',width:"50vw",height:"5vh"}} >Graphs</button>
+<button className="graphs" onClick={() => settab(true)}  style={ tab ? { backgroundColor:'#0f206c',width:"50vw",height:"5vh",color:'white'} : {backgroundColor:'grey',width:"50vw",height:"5vh",color:'black',fontWeight:'bold'}} >Graphs</button>
 
 
 
-<button className="defect" onClick={()=>settab(false)} style={ tab ? {backgroundColor:'grey',width:"50vw",height:"5vh"}: { backgroundColor:'#0f206c',width:"50vw",height:"5vh"} } >Defect log table</button>
+<button className="defect" onClick={()=>settab(false)} style={ tab ? {backgroundColor:'grey',width:"50vw",height:"5vh",color:'black',fontWeight:'bold'}: { backgroundColor:'#0f206c',width:"50vw",height:"5vh",color:'white'} } >Defect log table</button>
 
 
 

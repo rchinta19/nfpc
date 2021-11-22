@@ -8,8 +8,9 @@ const cookieParser = require('cookie-parser')
 const byCrypt = require('bcrypt');
 const port = process.env.PORT || 1919;
 const fs = require('fs');
-
-app.use(express.static('public')) 
+const path = require("path");
+app.use("/Images", express.static(path.join(__dirname, "/Images")));
+app.use(express.static('public'))
 app.use(fileUpload());
 app.use(cors());
 app.use(express.json());
@@ -36,35 +37,41 @@ const db = new sqlite3.Database("./db/nfpcf.db", (err) => {
 let userMail
 let users = []
 app.post('/Login', function (req, res) {
-  console.log(req)
-
-  db.get('SELECT * FROM Userlogins where Email_Id=? and Password=?', [req.body.Email,req.body.Password], function(err, rows){ 
- 
+  db.get('SELECT * FROM Userlogins where Email_Id=? and Password=?', [req.body.Email,req.body.Password], function(err, rows){
     try{
       if(rows.Email_Id == req.body.Email && rows.Password==req.body.Password){
-        users.push(req.body.Email)
-        req.session.userName=users[0]
+        console.log(rows)
          userMail=rows.Email_Id;
         res.send(true)
         const d = new Date()
         const hrs = d.getHours()
+        
         const mins= d.getMinutes()
-        const millsec = d.getMilliseconds()
+        const millsec = d.getSeconds()
         const dt = d.getDate()
         const mnth = d.getMonth()
         const yer = d.getFullYear()
         console.log(userMail)
-        const updateLogger = `UPDATE Userlogins SET Login_Time=?  Where Email_Id=?`
-        db.run(updateLogger,[`${hrs}:${mins}:${millsec} ${dt}-${mnth}-${yer}`,userMail],()=>{
-          console.log("updated")
+        const logoutLogger = `UPDATE Userlogins SET Logout_Time=?  Where Logout_Time IS NULL AND Login_Time IS NOT NULL `
+        db.run(logoutLogger,[`${dt}/${mnth+1}/${yer} ${hrs}:${mins}:${millsec}`],()=>{
+          console.log("previous users logged out")
+        })
+        const updateLogger = `UPDATE Userlogins SET Login_Time=?  Where Email_Id=?` 
+        db.run(updateLogger,[`${dt}/${mnth+1}/${yer} ${hrs}:${mins}:${millsec}`,userMail],()=>{
+          console.log(`${hrs}:${mins}:${millsec}`)
+        })
+        const updateloggerlogout = `UPDATE Userlogins SET Logout_Time=? Where Email_Id=?`
+        db.run(updateloggerlogout,[,userMail],()=>{
+          console.log("logout time is updated")
         })
         return
       }
-    }catch(err){
+    }
+    catch(err){
       console.log(err)
-    } 
-
-})
+      res.send(false)
+    }
+  })
 })
 const checkSignIn = (req,res,next)=>{
   console.log(req.session)
@@ -83,6 +90,7 @@ const checkSignIn = (req,res,next)=>{
 
   }
 }
+
 app.get('/logout',function(req,res){
   console.log(req.session.page_views)
   const d = new Date()
@@ -178,7 +186,7 @@ if (!fs.existsSync(folder)){
  console.log ("request arrived for active status")
   console.log(req.body.Sl_No)
   db.serialize(function(){
-  db.all(`UPDATE Modelstatuslist  SET Status = ? WHERE Sl_No >=1 `,["Inactive"])
+  db.all(`UPDATE Modelstatuslist  SET Status = ? WHERE Status = ? `,["Inactive","Active"])
   db.all(`UPDATE Modelstatuslist  SET Status = ? WHERE Sl_No = ? `,["Active",req.body.Sl_No])
   db.all(`select * from Modelstatuslist order by Status =?`,["Active"],function(err,statusrows){
   console.log ("model status is updated as active")
@@ -210,40 +218,122 @@ app.post('/historyfilter', (req,res) => {
 
 });
 // new deflog render
-app.post('/defectlogdaydata', (req,res) => {
-  console.log("request for historylog arrived")
-  console.log(req.body.from)
-  console.log(req.body.to)
-  console.log(req.body.skip)
-  console.log(req.body.limit)
-  let value = (req.body.skip);
-  console.log(value);
-  // let filterdata = `select * from historylog where Sl_No BETWEEN ? AND ?`;
- db.all(`select * from Defectlog where Time_Stamp BETWEEN ? AND ?   LIMIT ? OFFSET  ?`,[req.body.from,req.body.to,req.body.limit,value],(err, dlrows) => {
+// app.post('/defectlogdaydata', (req,res) => {
+ 
+//   let value = (req.body.skip);
+//   console.log(value);
+ 
+//   // let filterdata = `select * from historylog where Sl_No BETWEEN ? AND ?`;
+//  db.all(`select * from Defectlog where Time_Stamp BETWEEN ? AND ?   LIMIT ? OFFSET  ?`,[`${req.body.from}`,`${req.body.to}`,req.body.limit,value],(err, dlrows) => {
     
-   //db.all(`select * from historylog (MULTISET (SELECT SKIP ? FIRST ?) where Time_Stamp BETWEEN ? AND ?  `,[req.body.skip,req.body.limit,req.body.from,req.body.to],(err, hdrows) => {
-    if (err) {
-      throw err;
-    }
+//    //db.all(`select * from historylog (MULTISET (SELECT SKIP ? FIRST ?) where Time_Stamp BETWEEN ? AND ?  `,[req.body.skip,req.body.limit,req.body.from,req.body.to],(err, hdrows) => {
+//     if (err) {
+//       throw err;
+//     }
     
-    res.send(dlrows);
+//     res.send(dlrows);
    
-    console.log(dlrows )
-  })
+//     console.log(dlrows )
+//   })
 
-});
+// });
+app.post("/defectlogdaydata",checkSignIn, (req, res) => {
+    console.log(req.body)
+    let dlfilters = [];
+    let dlbottletypes = []
+   let {from,to,limit,skip} = req.body
+   
+  
+    for (const [dlkey, dlvalue] of Object.entries(req.body.filterConditions)) {
+      if (dlvalue) {
+        dlfilters.push(dlkey);
+      } 
+    }
+    if(dlfilters.includes("typeA")){
+      dlbottletypes.push("typeA")
+    }else{
+      dlbottletypes.push("")
+    }
+    if(dlfilters.includes("typeB")){
+      dlbottletypes.push("typeB")
+    }else{
+      dlbottletypes.push("")
+    }
+     if(dlfilters.includes("Discoloration")){
+      dlbottletypes.push("Discoloration")
+    }else{
+      dlbottletypes.push("")
+    }
+    if(dlfilters.includes("Scratches")){
+      dlbottletypes.push("Scratches")
+    }else{
+      dlbottletypes.push("")
+    }
+    if(dlfilters.includes("Foreign Particles")){
+      dlbottletypes.push('Foreign Particles')
+    }else{
+      dlbottletypes.push("")
+    }
+  
+  console.log(from,to,...dlbottletypes)
+  
+  
+    console.log(dlfilters);
+    let sqlString = `SELECT Sl_No,Time_Stamp,Bottle_Type,Defect,Defect_Type,Image,Score1,Mark_False_Positive FROM Defectlog WHERE  Time_Stamp BETWEEN ? AND ? AND Bottle_Type IN (?,?) AND Defect_Type IN (?,?,?) LIMIT ? OFFSET  ?;`
+    db.all(sqlString,[`${from}`,`${to}`,...dlbottletypes,`${limit}`,`${skip}`],(err,drows)=>{
+      if(err){
+        console.log(err)
+      }
+      res.send(drows) 
+      console.log(drows)
+    })
+    console.log(dlbottletypes) 
+  })
+  
 // defectlog table rendering
 app.post('/defectfilternextpage', (req,res) => {
-  console.log("request arrived for nextpage")
+  let dlfilters = [];
+  let dlbottletypes = []
+ let {from,to,limit,skip} = req.body
  
-  console.log(req.body.from)
-  console.log(req.body.to)
-  console.log(req.body.skip)
-  console.log(req.body.limit)
-  let value = (req.body.skip);
-  console.log(value);
-  // let filterdata = `select * from historylog where Sl_No BETWEEN ? AND ?`;
-  db.all(`Select * from Defectlog where Time_Stamp BETWEEN ? and ? LIMIT ? OFFSET  ?`,[req.body.from,req.body.to+1,req.body.limit,value],(err, dlnrows) => {
+
+  for (const [dlkey, dlvalue] of Object.entries(req.body.filterConditions)) {
+    if (dlvalue) {
+      dlfilters.push(dlkey);
+    } 
+  }
+  if(dlfilters.includes("typeA")){
+    dlbottletypes.push("typeA")
+  }else{
+    dlbottletypes.push("")
+  }
+  if(dlfilters.includes("typeB")){
+    dlbottletypes.push("typeB")
+  }else{
+    dlbottletypes.push("")
+  }
+   if(dlfilters.includes("Discoloration")){
+    dlbottletypes.push("Discoloration")
+  }else{
+    dlbottletypes.push("")
+  }
+  if(dlfilters.includes("Scratches")){
+    dlbottletypes.push("Scratches")
+  }else{
+    dlbottletypes.push("")
+  }
+  if(dlfilters.includes("Foreign Particles")){
+    dlbottletypes.push('Foreign Particles')
+  }else{
+    dlbottletypes.push("")
+  }
+
+console.log(from,to,...dlbottletypes)
+
+
+  console.log(dlfilters);
+  let sqlString = `SELECT Sl_No,Time_Stamp,Bottle_Type,Defect,Defect_Type,Image,Score1,Mark_False_Positive FROM Defectlog WHERE  Time_Stamp BETWEEN ? AND ? AND Bottle_Type IN (?,?) AND Defect_Type IN (?,?,?) LIMIT ? OFFSET  ?;`
+  db.all(sqlString,[`${from}`,`${to}`,...dlbottletypes,`${limit}`,`${skip}`],(err, dlnrows) => {
    
     if (err) {
       throw err;
@@ -256,16 +346,48 @@ app.post('/defectfilternextpage', (req,res) => {
 });
 
 app.post('/defectfilterpreviouspage', (req,res) => {
-  console.log("request arrived for")
+  let dlfilters = [];
+  let dlbottletypes = []
+ let {from,to,limit,skip} = req.body
  
-  console.log(req.body.from)
-  console.log(req.body.to)
-  console.log(req.body.skip)
-  console.log(req.body.limit)
-  let value = (req.body.skip);
-  console.log(value);
-  // let filterdata = `select * from historylog where Sl_No BETWEEN ? AND ?`;
-  db.all(`Select * from Defectlog where Time_Stamp BETWEEN ? and ? LIMIT ? OFFSET  ?`,[req.body.from,req.body.to+1,req.body.limit,value],(err, dlfrows) => {
+
+  for (const [dlkey, dlvalue] of Object.entries(req.body.filterConditions)) {
+    if (dlvalue) {
+      dlfilters.push(dlkey);
+    } 
+  }
+  if(dlfilters.includes("typeA")){
+    dlbottletypes.push("typeA")
+  }else{
+    dlbottletypes.push("")
+  }
+  if(dlfilters.includes("typeB")){
+    dlbottletypes.push("typeB")
+  }else{
+    dlbottletypes.push("")
+  }
+   if(dlfilters.includes("Discoloration")){
+    dlbottletypes.push("Discoloration")
+  }else{
+    dlbottletypes.push("")
+  }
+  if(dlfilters.includes("Scratches")){
+    dlbottletypes.push("Scratches")
+  }else{
+    dlbottletypes.push("")
+  }
+  if(dlfilters.includes("Foreign Particles")){
+    dlbottletypes.push('Foreign Particles')
+  }else{
+    dlbottletypes.push("")
+  }
+
+console.log(from,to,...dlbottletypes)
+
+
+  console.log(dlfilters);
+  let sqlString = `SELECT Sl_No,Time_Stamp,Bottle_Type,Defect,Defect_Type,Image,Score1,Mark_False_Positive FROM Defectlog WHERE  Time_Stamp BETWEEN ? AND ? AND Bottle_Type IN (?,?) AND Defect_Type IN (?,?,?) LIMIT ? OFFSET  ?;`
+  db.all(sqlString,[`${from}`,`${to}`,...dlbottletypes,`${limit}`,`${skip}`],(err, dlfrows) => {
    
     if (err) {
       throw err;
@@ -399,6 +521,12 @@ app.post("/defectlog", (req, res) => {
   });
 });
 // defectlog table rendering
+app.get('/fetchImage/:file(*)', (req, res) => {
+  let file = req.params.file;
+  let fileLocation = path.join('../Images/', file);
+  //res.send({image: fileLocation});
+  res.sendFile(`${fileLocation}`)
+})
 
 
 //marking false positive to 1
@@ -412,8 +540,7 @@ app.post("/markfalsepositiveto1",(req,res) =>{
     if (err) {
       return console.error(err.message);
     }
-    res.send(edit);
-  //  return;
+   res.send(edit) ;
   
   });
   
@@ -429,7 +556,6 @@ app.post("/markfalsepositiveto0",(req,res) =>{
       return console.error(err.message);
     }
     res.send(edit);
-  //  return ;
   
   });
   
@@ -546,7 +672,7 @@ console.log(fromDate,toDate,...bottletypes)
 
 
   console.log(filters);
-  let sqlString = `SELECT Defect_Type,COUNT(*) as count FROM Defectlog WHERE  Time_Stamp BETWEEN ? AND ? AND Bottle_Type IN (?,?) AND Defect_Type IN (?,?,?)  GROUP BY Defect_Type;`
+  let sqlString = `SELECT Defect_Type,COUNT(*) as count FROM Defectlog WHERE Time_Stamp BETWEEN ? AND ? AND Bottle_Type IN (?,?) AND Defect_Type IN (?,?,?)  GROUP BY Defect_Type;`
   db.all(sqlString,[`${fromDate}`,`${toDate}`,...bottletypes],(err,rows)=>{
     if(err){
       console.log(err)

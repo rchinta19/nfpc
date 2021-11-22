@@ -39,7 +39,7 @@
 }
 .history-filter{
     width: 89vw;
-    height: 10vh;
+    height: 15vh;
     background: #ffffff 0% 0% no-repeat padding-box;
     box-shadow: 0px 0.2rem 0.2rem #003e6129;
     border: 1px solid #e4e4e4;
@@ -48,16 +48,20 @@
     /* padding: 1rem 1rem 1rem 1rem; */
     align-content: center;
     margin:  1rem; 
+    padding: 1rem;
 }
 .history-input{
-    width: 20vw;
-    height:6vh;
-    margin:1rem;
+    width: 15vw !important;
+    height:6vh !important;
+    margin:1rem !important;
+    /* padding: 2rem !important; */
+    border: #212121 !important;
+    border-width: 1px !important;
 }
 .history-submitbtn{
     width: 10vw;
     height:6vh;
-    margin:1rem;
+    margin:1.2rem;
     background-color: #0f206c;
     color: white;
 }

@@ -36,10 +36,10 @@ export default function Sidenav(props) {
 
       <div>
       
-      <StyledLink  to="/homeDashboard/History">
+      <StyledLink  to="/homeDashboard/Change History">
       <MdOutlineHistoryEdu />
         
-        <h3>History</h3></StyledLink >
+        <h3>Change History</h3></StyledLink >
         
       </div>
 
