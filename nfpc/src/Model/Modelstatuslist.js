@@ -254,7 +254,7 @@ const Modelstatuslist = (props) => {
                       // className="configinput"
                     />
 
-                    <span className="configbrowse"> Browse </span>
+                    <span className="configbrowse" style={{ cursor: "pointer"}}> Browse </span>
                   </label>
 
                   <input

@@ -1,31 +1,26 @@
 import React ,{useState,useEffect} from "react";
-import Renderhistory from "./Renderdefectlog";
+import Renderdefectlog from "./Renderdefectlog";
 import { TiArrowUnsorted } from "react-icons/ti";
-import { useDispatch, useSelector } from "react-redux";
+import {  useSelector } from "react-redux";
+import { CSVLink } from "react-csv";
 import './Defectlog.modules.css';
 
 import axios from 'axios';
 const Defectlog = (props) =>{
-//   let fromdaydate = new Date().getFullYear() +  "-" +    (new Date().getMonth() + 1) +    "-" + pad2(new Date().getDate())   
-//   let todaydate =  new Date().getFullYear() +  "-" +    (new Date().getMonth() + 1) +    "-" +   pad2(new Date().getDate()+1)
-  const filterConditions = useSelector((state) => state.filter);
-    // const [from,setfrom] = useState(fromdaydate);
-    // const [to,setto] = useState(todaydate);
 
-//   const [historydata, sethistorydata] = useState([]);
+  const filterConditions = useSelector((state) => state.filter);
+
   const [limit, setLimit] = useState(10);
   const [skip, setSkip] = useState(0);
   const [totalBottleCount,settotalBottleCount] = useState([])
   const [ticked,setticked]=useState(false)
-//   const [dates, setdates] = useState({
-//     fromDate:fromdaydate,
-//     toDate: todaydate,
-//   });
-//   function pad2(n) {
+  const [vsc ,setvsc] = useState([])
 
-//     return (n < 10 ? '0' : '') + n;
+  function pad2(n) {
 
-//   }
+    return (n < 10 ? '0' : '') + n;
+
+  }
 const config = {
   headers: {
     "Access-Control-Allow-Origin": "*",
@@ -34,7 +29,7 @@ const config = {
 };
 const checkBoxSelectionHandler = (check,sno)=>{
   
-        console.log(check)
+        console.log(check + "hai")
         console.log(sno)
         let checkCondition = check
         if(checkCondition==0){
@@ -57,7 +52,7 @@ const checkBoxSelectionHandler = (check,sno)=>{
             // if (res.data) {
             //   console.log(res);
             //   // props.notticked(res.data);
-            // 
+            
               console.log(res.data)
              
             })
@@ -65,15 +60,7 @@ const checkBoxSelectionHandler = (check,sno)=>{
 
       }
     }
-  //  const renderCell = (params)=>{
-  //     if(params.row.Mark_False_Positive==1){
-  //     return <input type="checkbox" checked onChange={(e)=>{checkBoxSelectionHandler(e.target.checked,params.id)}}  />
-  //    }
-  //    else{
-  //     return <input type="checkbox"  onChange={(e)=>{checkBoxSelectionHandler(e.target.checked,params.id)}}  />
-  
-  //    }
-  //   }
+ 
   
   const nextPage = () => {
       setSkip(skip + limit)
@@ -91,7 +78,7 @@ const checkBoxSelectionHandler = (check,sno)=>{
         // sethistorydata(res.data)
         const hdfn = []
       res.data.map(ele=>{
-      hdfn.push(<Renderhistory key={Math.random().toString()} hditm={ele}/>)
+      hdfn.push(<Renderdefectlog key={Math.random().toString()} hditm={ele}/>)
       })
       settotalBottleCount([...hdfn])
         
@@ -119,31 +106,19 @@ const checkBoxSelectionHandler = (check,sno)=>{
       } )
       .then((res) => {
         console.log(res.data);
-        // sethistorydata(res.data)
         const hdfp = []
       res.data.map(ele=>{
-      hdfp.push(<Renderhistory key={Math.random().toString()} hditm={ele}/>)
+      hdfp.push(<Renderdefectlog key={Math.random().toString()} hditm={ele}/>)
       })
       settotalBottleCount([...hdfp])
         
       })
       .catch(err=>console.log(err))  
-      // setfrom("")
-      // setto("")
       }
       else
       {setSkip(0)}
-    
       };
 
-// const handlehistoryinputfrom = (e) =>{
-//   setfrom(e.target.value)
-//   setSkip(0)
-// }
-// const handlehistoryinputto = (e) =>{
-//   setto(e.target.value)
-//   setSkip(0)
-// }
 
 useEffect(()=>{ 
       
@@ -159,10 +134,11 @@ useEffect(()=>{
   )
   .then((res) => {
     console.log(res.data);
+    setvsc(res.data)
     // sethistorydata(res.data)
     const hd = []
     res.data.map(ele=>{
-hd.push(<Renderhistory key={Math.random().toString()} hditm={ele} selectHandler={checkBoxSelectionHandler} checkValue={ele.Mark_False_Positive} />)
+hd.push(<Renderdefectlog key={Math.random().toString()} hditm={ele} selectHandler={checkBoxSelectionHandler} checkValue={ele.Mark_False_Positive} />)
 
 })
 settotalBottleCount([...hd])
@@ -171,56 +147,31 @@ settotalBottleCount([...hd])
   .catch(err=>console.log(err))  
   
 },[skip, limit,props.fromDate,ticked])
+// csv below by Muppa
 
+const headers = [
+  { label: "Sl_No", key: "Sl_No" },
+  { label: "Time_Stamp", key: "Time_Stamp" },
+  { label: "Bottle_Type", key: "Bottle_Type" },
+  { label: "Defect", key: "Defect" },
+  { label: "Defect_Type", key: "Defect_Type" },
+  { label: "Image", key: "Image" },
+  { label: "Score", key: "Score" },
+  { label: "Mark_False_Positive", key: "Mark_False_Positive" }
+];
 
-// const applyFilterHandler = (e) => {
-   
-//   axios
-// .post("/historyfilter",
-// {
-//   from:from,
-//   to:to,
-//   skip:skip,
-//   limit:limit
-// } )
-// .then((res) => {
-//   console.log(res.data);
-//   // sethistorydata(res.data)
-//   const hdf = []
-// res.data.map(ele=>{
-// hdf.push(<Renderhistory key={Math.random().toString()} hditm={ele}/>)
-// })
-// sethistorydata([...hdf])
-  
-// })
-// .catch(err=>console.log(err))  
-// // setfrom("")
-// // setto("")
-// };
+const csvReport = {
+  data: vsc,
+  headers: headers,
+  filename: 'Defectlog.csv'
+};
+// csv above by Muppa
 
   return(
   <>
+  
    <h1>Recent Defect logs</h1>
-{/* <div className="history-filter">
-                  
 
-<input className='history-input'
-type="date"
-value={from}
-name="from"
-onChange={handlehistoryinputfrom}
-/>
-
-<input className='history-input'
-type="date"
-name="to"
-value={to}
-onChange={handlehistoryinputto}
-/>
-     <button type="submit" className="history-submitbtn" onClick={applyFilterHandler} >
-            Search
-          </button>
-          </div> */}
   <div  className="historytable">
   <table >
               <thead >
@@ -243,6 +194,16 @@ onChange={handlehistoryinputto}
                </tbody>
             </table>
     </div>
+<>
+{/* const csvReport = {
+  totalBottleCount= {totalBottleCount},
+  headers= {headers},
+  filename= 'Defectlog.csv'
+}; */}
+    <CSVLink 
+    {...csvReport}
+    >Export to CSV</CSVLink>
+    </>
             <div className="pages"> 
             <button onClick={previousPage}  className="pagebutton" > Previous Page </button>
             <button onClick={nextPage}  className="pagebutton" > Next Page </button> 

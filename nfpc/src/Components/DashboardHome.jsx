@@ -4,43 +4,44 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
-import { Grid, Button, InputBase, Appbar, AppBar } from "@mui/material";
+import { Grid, Button, InputBase, AppBar } from "@mui/material";
 import { makeStyles } from "@mui/styles";
-import { styled, alpha } from "@mui/material/styles";
+import { styled } from "@mui/material/styles";
 import nfpc from "../Assets/Images/nfpc.png";
 import appsteklogo from "../Assets/Images/appsteklogo.png";
-import NotificationsOutlinedIcon from "@mui/icons-material/NotificationsOutlined";
+// import NotificationsOutlinedIcon from "@mui/icons-material/NotificationsOutlined";
 import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
-import PowerSettingsNewOutlinedIcon from "@mui/icons-material/PowerSettingsNewOutlined";
+// import PowerSettingsNewOutlinedIcon from "@mui/icons-material/PowerSettingsNewOutlined";
 import Sidenav from "./Sidenav/Sidenav";
-import SearchIcon from "@mui/icons-material/Search";
+// import SearchIcon from "@mui/icons-material/Search";
 import Dashboard from "./Dashboard/Dashboard";
-import DefectLogTables from "./DefectLogTables";
-import SecuredRoute from "./SecuredRoute";
+// import DefectLogTables from "./DefectLogTables";
+// import SecuredRoute from "./SecuredRoute";
 import { LoggingUser } from "../features/loggingHandler";
 import { useDispatch ,useSelector} from "react-redux";
 import {
-  BrowserRouter as Router,
+  BrowserRouter,
   Switch,
   Route,
-  useHistory,
-  Redirect,
+  // useHistory,
+  // Redirect,
   withRouter,
 } from "react-router-dom";
 import Modelstatuslist from "../Model/Modelstatuslist";
-import Login from "../login/Login";
+// import Login from "../login/Login";
 import Helper from "./Helper";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import axios from "axios";
 import Changedata from "./Historylog/Changedata";
 import Popover from '@mui/material/Popover';
-import FilledInput from '@mui/material/FilledInput';
+// import FilledInput from '@mui/material/FilledInput';
 import FormControl from '@mui/material/FormControl';
-import FormHelperText from '@mui/material/FormHelperText';
+// import FormHelperText from '@mui/material/FormHelperText';
 import Input from '@mui/material/Input';
 import InputLabel from '@mui/material/InputLabel';
-import OutlinedInput from '@mui/material/OutlinedInput';
-import { typography } from "@mui/system";
+import { fontWeight } from "@mui/system";
+// import OutlinedInput from '@mui/material/OutlinedInput';
+// import { typography } from "@mui/system";
 
 const useStyles = makeStyles({
   searchStyles: {
@@ -54,6 +55,7 @@ const useStyles = makeStyles({
   IconStyles: {
     border: "2px solid #E2E0E1 ",
     borderRadius: "40px",
+    cursor:"pointer"
   },
 });
 
@@ -90,7 +92,7 @@ console.log(props.history)
   let User =useSelector((state)=>state.userLog.UserName)
   let CurrentLocation = props.location
   let currentUserPath = useSelector((state)=>state.userLog.currentPath)
-  const [p,setP] = useState(currentUserPath)
+  // const [p,setP] = useState(currentUserPath)
   const [anchorEl, setAnchorEl] = React.useState(null);
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -169,6 +171,7 @@ console.log(User)
           <div className="search-icons">
           <PersonOutlineOutlinedIcon className={classes.IconStyles + ` icon-not`} aria-describedby={id} variant="contained" onClick={handleClick}
   />
+  <p style={{fontWeight:'bold', fontSize:'1.5rem'}}>{User}</p>
 <Popover
   id={id}
   open={open}

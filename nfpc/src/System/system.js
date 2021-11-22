@@ -42,8 +42,10 @@ axios
                   Sno
                   <TiArrowUnsorted /> 
                 </th>
-                <th className="th">Defect</th>
-                <th className="th">Score</th>
+                <th className="th">Scratches</th>
+                <th className="th">Foreign Particles</th>
+                <th className="th">Discoloration</th>
+                <th className="th">Model Name</th>
                 <th className="th">Action</th>
                 
               </tr>

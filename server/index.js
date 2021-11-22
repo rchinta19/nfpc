@@ -9,7 +9,7 @@ const byCrypt = require('bcrypt');
 const port = process.env.PORT || 1919;
 const fs = require('fs');
 
-app.use(express.static('public'))
+app.use(express.static('public')) 
 app.use(fileUpload());
 app.use(cors());
 app.use(express.json());
@@ -180,7 +180,7 @@ if (!fs.existsSync(folder)){
   db.serialize(function(){
   db.all(`UPDATE Modelstatuslist  SET Status = ? WHERE Sl_No >=1 `,["Inactive"])
   db.all(`UPDATE Modelstatuslist  SET Status = ? WHERE Sl_No = ? `,["Active",req.body.Sl_No])
-  db.all(`select * from Modelstatuslist`,function(err,statusrows){
+  db.all(`select * from Modelstatuslist order by Status =?`,["Active"],function(err,statusrows){
   console.log ("model status is updated as active")
     res.send(statusrows)
     console.log(statusrows)
@@ -287,7 +287,7 @@ app.post('/historyfilter', (req,res) => {
   let value = (req.body.skip);
   console.log(value);
   // let filterdata = `select * from historylog where Sl_No BETWEEN ? AND ?`;
-  db.all(`select * from historylog where Time_Stamp BETWEEN ? AND ? LIMIT ? OFFSET  ?`,[req.body.from,req.body.to+1,req.body.limit,value],(err, hfrows) => {
+  db.all(`SELECT * from historylog  WHERE Time_Stamp BETWEEN ? AND ? ORDER BY Sl_No DESC LIMIT ? OFFSET  ?  `,[req.body.from,req.body.to+1,req.body.limit,value],(err, hfrows) => {
    
     if (err) {
       throw err;
@@ -309,7 +309,7 @@ app.post('/historyfilternextpage', (req,res) => {
   let value = (req.body.skip);
   console.log(value);
   // let filterdata = `select * from historylog where Sl_No BETWEEN ? AND ?`;
-  db.all(`select * from historylog where Time_Stamp BETWEEN ? AND ? LIMIT ? OFFSET  ?`,[req.body.from,req.body.to+1,req.body.limit,value],(err, hfnrows) => {
+  db.all(`select * from historylog where Time_Stamp BETWEEN ? AND ? ORDER BY Sl_No DESC LIMIT ? OFFSET  ?`,[req.body.from,req.body.to+1,req.body.limit,value],(err, hfnrows) => {
    
     if (err) {
       throw err;
@@ -331,7 +331,7 @@ app.post('/historyfilterpreviouspage', (req,res) => {
   let value = (req.body.skip);
   console.log(value);
   // let filterdata = `select * from historylog where Sl_No BETWEEN ? AND ?`;
-  db.all(`select * from historylog where Time_Stamp BETWEEN ? AND ? LIMIT ? OFFSET  ?`,[req.body.from,req.body.to+1,req.body.limit,value],(err, hfrows) => {
+  db.all(`select * from historylog where Time_Stamp BETWEEN ? AND ? ORDER BY Sl_No DESC LIMIT ? OFFSET  ?`,[req.body.from,req.body.to+1,req.body.limit,value],(err, hfrows) => {
    
     if (err) {
       throw err;
@@ -353,7 +353,7 @@ app.post('/historyfilterpreviouspage', (req,res) => {
     let value = (req.body.skip);
     console.log(value);
     // let filterdata = `select * from historylog where Sl_No BETWEEN ? AND ?`;
-   db.all(`select * from historylog where Time_Stamp BETWEEN ? AND ?   LIMIT ? OFFSET  ?`,[req.body.from,req.body.to+1,req.body.limit,value],(err, hdrows) => {
+   db.all(`select * from historylog where Time_Stamp BETWEEN ? AND ? ORDER BY Sl_No DESC  LIMIT ? OFFSET  ?`,[req.body.from,req.body.to+1,req.body.limit,value],(err, hdrows) => {
       
      //db.all(`select * from historylog (MULTISET (SELECT SKIP ? FIRST ?) where Time_Stamp BETWEEN ? AND ?  `,[req.body.skip,req.body.limit,req.body.from,req.body.to],(err, hdrows) => {
       if (err) {
@@ -369,8 +369,10 @@ app.post('/historyfilterpreviouspage', (req,res) => {
   //end 
 // edit data in system thershold in below
 app.post('/edit' , function(req,res){
-  let data = [req.body.editvalue ,req.body.Sl_No];
-  let sql = `UPDATE SystemThreshold SET Score = ? WHERE Sl_No = ?`;
+  console.log("request arrived for system threshold to update values")
+  let data = [req.body.editvalue.Scratches + "%",req.body.editvalue.ForeignParticles + "%",req.body.editvalue.Discoloration + "%" ,req.body.Sl_No];
+  console.log([req.body.editvalue.Scratches,req.body.editvalue.ForeignParticles,req.body.editvalue.Discoloration ,req.body.Sl_No])
+  let sql = `UPDATE SystemThreshold SET Scratches = ?, Foreign_Particles=?, Discoloration=? WHERE Sl_No = ?`;
 
     db.all(sql, data, function(err,edit){
     if (err) {
@@ -410,9 +412,11 @@ app.post("/markfalsepositiveto1",(req,res) =>{
     if (err) {
       return console.error(err.message);
     }
-   return ;
+    res.send(edit);
+  //  return;
   
   });
+  
 });
 app.post("/markfalsepositiveto0",(req,res) =>{
   console.log("1-1")
@@ -424,9 +428,11 @@ app.post("/markfalsepositiveto0",(req,res) =>{
     if (err) {
       return console.error(err.message);
     }
-   return ;
+    res.send(edit);
+  //  return ;
   
   });
+  
 });
 
 app.post("/checkdefectlogValue",(req,res)=>{
@@ -464,10 +470,10 @@ app.get('/table',  (req, res) => {
 
 //model status table rendering
 app.get('/status',  (req, res) => {
-  let sql = `SELECT * from Modelstatuslist`;
+  let sql = `SELECT * from Modelstatuslist ORDER BY Status=?  DESC`;
   
   // first row only
-  db.all(sql, (err, rowm) => {
+  db.all(sql,["Active"], (err, rowm) => {
     if (err) {
       
       throw err;
@@ -476,7 +482,7 @@ app.get('/status',  (req, res) => {
     res.send(rowm);
     
   });
-  });
+  }); 
 //model status table rendering
 
 app.get("/data", (req, res) => {
@@ -550,6 +556,88 @@ console.log(fromDate,toDate,...bottletypes)
   })
   console.log(bottletypes) 
 })
+
+//forget password//
+var nodemailer = require('nodemailer');
+var randtoken = require('rand-token');
+//send email
+function sendEmail(email, token) {
+  var email = email;
+  var token = token;
+  var mail = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+  user: '', // Your email id
+  pass: '' // Your password
+  }
+  });
+  var mailOptions = {
+  from: 'appstekbhavitha@gmail.com',
+  to: email,
+  subject: 'Reset Password Link - NFPC.com',
+  html: '<p>You requested for reset password, kindly use this <a href="http://localhost:4000/reset-password?token=' + token + '">link</a> to reset your password</p>'
+  };
+  mail.sendMail(mailOptions, function(error, info) {
+  if (error) {
+  console.log(1)
+  } else {
+  console.log(0)
+  }
+  });
+  }
+
+  app.get('/', function(req, res, next) {
+    res.render('index', {
+    title: 'Forget Password Page'
+    });
+    });
+    /* send reset password link in email */
+    app.post('/reset-password-email', function(req, res, next) {
+    var email = req.body.email;
+    //console.log(sendEmail(email, fullUrl));
+    db.all('SELECT * FROM users WHERE email ="' + email + '"', function(err, result) {
+    if (err) throw err;
+    var type = ''
+    var msg = ''
+    console.log(result[0]);
+    if (result[0].email.length > 0) {
+    var token = randtoken.generate(20);
+    var sent = sendEmail(email, token);
+    if (sent != '0') {
+    var data = {
+    token: token
+    }
+    connection.query('UPDATE users SET ? WHERE email ="' + email + '"', data, function(err, result) {
+    if(err) throw err
+    })
+    type = 'success';
+    msg = 'The reset password link has been sent to your email address';
+    } else {
+    type = 'error';
+    msg = 'Something goes to wrong. Please try again';
+    }
+    } else {
+    console.log('2');
+    type = 'error';
+    msg = 'The Email is not registered with us';
+    }
+    req.flash(type, msg);
+    res.redirect('/');
+    });
+    })
+
+
+
+
+
+
+
+
+
+
+
+
+// forget password//
 
 app.listen(port, () => {
   console.log(`Server is running at http://localhost:${port}`);

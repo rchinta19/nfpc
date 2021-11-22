@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import DynamicChart from "../DynamicChart";
-import { Bar, Pie } from "react-chartjs-2";
+// import { Bar, Pie } from "react-chartjs-2";
 import PieChart from "../PieChart";
 import LineChart from "../LineChart";
 import DefectLogTables from "../DefectLogTables";
@@ -24,11 +24,12 @@ import { filterHandler } from "../../features/filter/filterSlice";
 import { defectSettingHandler } from "../../features/DatesettingSlice";
 
 import "./Dashboard.modules.css";
-import { blue, green } from "@mui/material/colors";
+// import { blue, green } from "@mui/material/colors";
 function Dashboard() {
+  let User =useSelector((state)=>state.userLog.UserName)
   const [value, setValue] = useState({ fromd: "", tod: "" });
   const filterConditions = useSelector((state) => state.filter);
-  const [checkBox, setCheckBox] = useState(false)
+  // const [checkBox, setCheckBox] = useState(false)
   const [tab, settab] = useState(true)
   const x = new Date()
   let givenDate = `${x.getFullYear()}-${x.getMonth()+1}-${x.getDate()}`
@@ -87,7 +88,10 @@ function Dashboard() {
 
   return (
     <Grid container xs={12} >
+      <Grid XS={12}>
+    <h2>Welcome Back! {User}</h2>
     <h1>Dashboard</h1>
+    </Grid>
       <Grid xs={12}>
         <Paper elevation={3} className="form">
           <div>
@@ -106,7 +110,7 @@ function Dashboard() {
                 renderInput={(params) => <TextField {...params} />}
               />
               <DatePicker
-                label="to"
+                label="To Date"
                 value={checkedValues.toDate}
                 className="dtpicker"
                 onChange={(value) => {
@@ -186,7 +190,7 @@ function Dashboard() {
             />
             </div>
           </FormGroup>
-          <Button type="submit" className="submit-btn" onClick={applyFilterHandler} >
+          <Button type="submit" className="history-submitbtn" onClick={applyFilterHandler} >
             Submit
           </Button>
         </Paper>

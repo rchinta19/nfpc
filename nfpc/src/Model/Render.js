@@ -19,7 +19,7 @@ const handletoggle = () => {
       <td className="td">{props.itm.Model}</td>
       <td className="td">{props.itm.Version }</td>
       <td className="td">{props.itm.Last_Update }</td>
-      <td className="td" onClick={handletoggle} >{props.itm.Status}</td> 
+      <td className="td" onClick={handletoggle} style={{ cursor: "pointer"}} >{props.itm.Status}</td> 
       </tr>
      );
     };

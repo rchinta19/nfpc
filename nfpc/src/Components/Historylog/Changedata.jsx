@@ -165,7 +165,7 @@ value={to}
 onChange={handlehistoryinputto}
 />
      <button type="submit" className="history-submitbtn" onClick={applyFilterHandler} >
-            Search
+            Submit
           </button>
           </div>
   <div  className="historytable">
@@ -190,7 +190,11 @@ onChange={handlehistoryinputto}
             </table>
     </div>
             <div className="pages"> 
-            <button onClick={previousPage}  className="pagebutton" > Previous Page </button>
+            <button onClick={previousPage}
+            style={{backgroundColor:skip==0 ? "grey" : "#0f206c"}} 
+             className="pagebutton" 
+            disabled={skip==0 ? true : false} 
+            > Previous Page </button>
             <button onClick={nextPage}  className="pagebutton" > Next Page </button> 
         </div>
 

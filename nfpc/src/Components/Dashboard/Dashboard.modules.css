@@ -33,3 +33,10 @@ h1{
 .defect-log-table{
   margin: 0px 0px;
 }
+.history-submitbtn{
+  width: 10vw !important;
+  height:6vh !important;
+
+  background-color: #0f206c !important;
+  color: white !important;
+}

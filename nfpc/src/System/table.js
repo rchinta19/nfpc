@@ -4,46 +4,101 @@ import "./table.modules.css";
 import axios from "axios";
 
 const Table = (props) => {
+  const defecttypes = {
+    Scratches:"",
+    ForeignParticles:"",
+    Discoloration:""
+    };
+
+  const [edit, setedit] = useState(true);
+  const [editvalue, seteditvalue] = useState([defecttypes]);
+  const [store, setstore] = useState({Scratches:props.itm.Scratches,
+    ForeignParticles:props.itm.Foreign_Particles,
+    Discoloration:props.itm.Discoloration});
+
+
   const handleEdit = () => {
     setedit(false);
   };
   const handleCancel = () => {
     setedit(true);
   };
-  const save = (e) => {
-    if(editvalue){
-      if(editvalue.length<=3){
+  const handlesave = (e) => {
+    if(editvalue.Scratches){
+    
     e.preventDefault();
     axios
     .post('/edit', {
-      editvalue:editvalue + "%",
+       editvalue,
       Sl_No:props.itm.Sl_No,
     })
   }
-    window.location.reload()
-    // if (!newName.trim()) {
-    //   return;
-    // }
-    setstore("");
-    setstore([editvalue]);
-    seteditvalue("");
-    setedit(false);
-  
-  }
+  console.log(editvalue)
+    // window.location.reload()
+    setedit(true);
   };
+  const changevalue=(e)=>{
+    seteditvalue({...editvalue,[e.target.name]:e.target.value})
+  }
 
-  const [edit, setedit] = useState(true);
-  const [editvalue, seteditvalue] = useState();
-  const [store, setstore] = useState(props.itm.Score);
-
+  
   return (
+  <>
+
     <tr>
+      
       <td className="td"> {props.itm.Sl_No}</td>
-      <td className="td">{props.itm.Defect}</td>
+      <td>
+     
+     {edit ? (store.Scratches
+       
+     ) : (
+       <>
+       
+         <input
+           type="number"
+           required
+           style={{width:"60px"}}
+           name="Scratches"
+           suffix={'%'}
+             max="100"
+            min="0"
+           defaultValue={editvalue.Scratches || store.Scratches}
+           onChange={(e) => changevalue(e)}
+         />
+         
+       </>
+     )}
+     
+   </td>
+    
+      <td>
+     
+     {edit ? (store.ForeignParticles
+       
+     ) : (
+       <>
+       
+         <input
+           type="number"
+           required
+           style={{width:"60px"}}
+           name="ForeignParticles"
+             max="100"
+            min="0"
+           defaultValue={editvalue.ForeignParticles || store.ForeignParticles}
+           onChange={(e) => changevalue(e)}
+         />
+         
+       </>
+     )}
+     
+   </td>
+      
       {/* <td>{props.itm.Description}</td> */}
       <td>
      
-        {edit ? (store
+        {edit ? (store.Discoloration 
           
         ) : (
           <>
@@ -52,23 +107,24 @@ const Table = (props) => {
               type="number"
               required
               style={{width:"60px"}}
-              name="phoneNumber"
+              name="Discoloration"
                 max="100"
                min="0"
-              defaultValue={editvalue || store}
-              onChange={(e) => seteditvalue(e.target.value)}
+              defaultValue={editvalue.Discoloration  || store.Discoloration }
+              onChange={(e) => changevalue(e)}
             />
             
           </>
         )}
         
       </td>
+      <td className="td">{props.itm.Model_Name}</td>
       <td className="td">
-        {edit ? (<div onClick={(event) => handleEdit(event)} style={{color:"#005FFF"}}>Edit</div>
+        {edit ? (<div onClick={(event) => handleEdit(event)} style={{color:"#005FFF",cursor:"pointer"}}>Edit</div>
          
         ) : ( <div >
           <button type="submit" 
-          onClick={save}
+          onClick={handlesave}
           className="editbutton"
           >
             Save
@@ -83,6 +139,7 @@ const Table = (props) => {
         )}
       </td>
     </tr>
+    </>
   );
 };
 
