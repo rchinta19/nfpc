@@ -9,9 +9,9 @@ const LineChart = () => {
   const lables = []
   const dataset = []
   const clrs= []
-   defectTypesAndCount.map((ele,index)=>{
-    lables.push(ele.Defect_Type)
-    dataset.push(ele.count)
+   defectTypesAndCount[0].map((ele,index)=>{
+    lables.push(ele.Time_Stamp)
+    dataset.push(ele.TotalCount)
   })
   const data = {
     labels: lables,

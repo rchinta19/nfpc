@@ -7,10 +7,11 @@ import { useSelector } from 'react-redux';
 const PieChart = () => {
 
   const defectTypesAndCount = useSelector(state => state.dataset.typeA)
+  console.log(defectTypesAndCount)
   const lables = []
   const dataset = []
   const clrs= []
-  defectTypesAndCount.map((ele,index)=>{
+  defectTypesAndCount[1].map((ele,index)=>{
     lables.push(ele.Defect_Type)
     dataset.push(ele.count)
   })

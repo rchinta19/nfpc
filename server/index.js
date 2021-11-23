@@ -28,7 +28,7 @@ app.use(sessions({
 }))
 
 let session
-const db = new sqlite3.Database("./db/nfpc3.db", (err) => {
+const db = new sqlite3.Database("./db/nfpc.db", (err) => {
   if (err) {
     console.log(err);
   }
@@ -605,31 +605,86 @@ app.get('/status',  (req, res) => {
   });
 //model status table rendering
 
-app.get("/data", (req, res) => {
-  const defectTypes_Count = [];
-  const sql1 = `SELECT Defect_Type,count(*) as count FROM Defectlog WHERE Bottle_Type=? GROUP BY Defect_Type`;
-  const sql = `SELECT Defect_Type,count(*) as count FROM Defectlog WHERE Bottle_Type=? GROUP BY Defect_Type`;
-
-  db.all(sql1, ["typeA"], (err, rows) => {
-    if (err) {
-      console.log(err);
-    }
-    defectTypes_Count.push(rows);
-  });
-  db.all(sql, ["typeB"], (err, rows) => {
-    if (err) {
-      console.log(err);
-    }
-    defectTypes_Count.push(rows);
-    res.send(defectTypes_Count);
-  });
-});
-app.post("/data/filter",checkSignIn, (req, res) => {
+app.get("/data", async (req, res) => {
   console.log(req.body)
   let filters = [];
   let bottletypes = []
+  const chartData =[]
+ const x = new Date()
+  let givenDate = `${x.getFullYear()}-${x.getMonth()+1}-${x.getDate()-2}`
+  let nextDate =`${x.getFullYear()}-${x.getMonth()+1}-${x.getDate()-1}`
+  // 
+
+  for (const [key, value] of Object.entries(req.body)) {
+    if (value) {
+      filters.push(key);
+    } 
+  }
+  if(filters.includes("typeA")){
+    bottletypes.push("typeA")
+  }else{
+    bottletypes.push("")
+  }
+  if(filters.includes("typeB")){
+    bottletypes.push("typeB")
+  }else{
+    bottletypes.push("")
+  }
+   if(filters.includes("Discoloration")){
+    bottletypes.push("Discoloration")
+  }else{
+    bottletypes.push("")
+  }
+  if(filters.includes("Scratches")){
+    bottletypes.push("Scratches")
+  }else{
+    bottletypes.push("")
+  }
+  if(filters.includes("Foreign Particles")){
+    bottletypes.push('Foreign Particles')
+  }else{
+    bottletypes.push("")
+  }
+
+  let sqlString1 = `SELECT Time_Stamp,SUM(count) as TotalCount FROM (SELECT Time_Stamp, Defect_Type,COUNT(*) as count FROM Defectlog WHERE Time_Stamp BETWEEN ? AND ? AND Bottle_Type IN (?,?) AND Defect_Type IN (?,?,?)  GROUP BY Defect_Type,Time_Stamp) GROUP BY Time_Stamp;`
+  db.all(sqlString1,[`${givenDate}`,`${nextDate}`,"typeA","typeB","Discoloration","Foreign Particles","Scratches"],async(err,rows)=>{
+    if(err){
+      console.log(err)
+      return
+    }
+    await chartData.push(rows)
+  })
+  
+  let sqlString = `SELECT Defect_Type,COUNT(*) as count FROM Defectlog WHERE Time_Stamp BETWEEN ? AND ? AND Bottle_Type IN (?,?) AND Defect_Type IN (?,?,?)  GROUP BY Defect_Type;`
+
+  db.all(sqlString,[`${givenDate}`,`${nextDate}`,"typeA","typeB","Discoloration","Foreign Particles","Scratches"],async(err,rows)=>{
+
+    if(err){
+
+      console.log(err)
+    }
+   await chartData.push(rows)
+   
+  })
+  let barDataQuary = ` SELECT Defect_Type,Bottle_Type,COUNT(*) as count FROM Defectlog Where Time_Stamp BETWEEN ? AND ? AND Bottle_Type IN(?,?) AND Defect_type IN(?,?,?,?)  GROUP BY Defect_Type,Bottle_Type;`
+  db.all( barDataQuary,[`${givenDate}`,`${nextDate}`,"typeA","typeB","Discoloration","Foreign Particles","Scratches"],async(err,rows)=>{
+    if(err){
+      console.log(err)
+    }
+    await chartData.push(rows)
+    res.send(chartData)
+    console.log(chartData)
+  })
+
+});
+
+app.post("/data/filter",checkSignIn, async (req, res) => {
+  console.log(req.body)
+  let filters = [];
+  let bottletypes = []
+  const chartData =[]
  let {fromDate,toDate} = req.body
- console.log(fromDate,toDate)
+
 
   for (const [key, value] of Object.entries(req.body)) {
     if (value) {
@@ -666,16 +721,40 @@ console.log(fromDate,toDate,...bottletypes)
 
 
   console.log(filters);
+  let sqlString1 = `SELECT Time_Stamp,SUM(count) as TotalCount FROM (SELECT Time_Stamp, Defect_Type,COUNT(*) as count FROM Defectlog WHERE Time_Stamp BETWEEN ? AND ? AND Bottle_Type IN (?,?) AND Defect_Type IN (?,?,?)  GROUP BY Defect_Type,Time_Stamp) GROUP BY Time_Stamp;`
+  db.all(sqlString1,[`${fromDate}`,`${toDate}`,...bottletypes],async(err,rows)=>{
+    if(err){
+      console.log(err)
+      return
+    }
+
+    chartData.push(rows)
+   
+  })
+  
   let sqlString = `SELECT Defect_Type,COUNT(*) as count FROM Defectlog WHERE Time_Stamp BETWEEN ? AND ? AND Bottle_Type IN (?,?) AND Defect_Type IN (?,?,?)  GROUP BY Defect_Type;`
-  db.all(sqlString,[`${fromDate}`,`${toDate}`,...bottletypes],(err,rows)=>{
+
+  db.all(sqlString,[`${fromDate}`,`${toDate}`,...bottletypes],async(err,rows)=>{
+
+    if(err){
+
+      console.log(err)
+    }
+   await chartData.push(rows)
+  
+  })
+  let barDataQuary = ` SELECT Defect_Type,Bottle_Type,COUNT(*) as count FROM Defectlog Where Time_Stamp BETWEEN ? AND ? AND Bottle_Type IN (?,?) AND Defect_type IN(?,?,?,?)  GROUP BY Defect_Type,Bottle_Type;`
+  db.all( barDataQuary,[`${fromDate}`,`${toDate}`,...bottletypes],async(err,rows)=>{
     if(err){
       console.log(err)
     }
-    res.send(rows) 
-    console.log(rows)
+    await chartData.push(rows)
+    res.send(chartData)
+    console.log(chartData)
   })
-  console.log(bottletypes) 
+  
 })
+
 
 app.listen(port, () => {
   console.log(`Server is running at http://localhost:${port}`);

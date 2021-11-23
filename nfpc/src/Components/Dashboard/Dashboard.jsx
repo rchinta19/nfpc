@@ -81,12 +81,14 @@ function Dashboard() {
   
     axios.get("/data").then((res) => {
         const [typea, typeb] = res.data;
-        dispatch(defectSettingHandler({ typeA: typea, typeB: typeb }));
+        dispatch(defectSettingHandler({ typeA: res.data }));
       });
+
     // console.log("executed")
     // axios.post('/data/filter',{filterString:"",queryParams:[]},config).then(res=>{
     //   console.log(res)
     // }).catch(err=>console.error(err))
+    
   }, []);
 
   return (
