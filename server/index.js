@@ -666,8 +666,8 @@ await  db.all(sqlString1,[`${givenDate}`,`${nextDate}`,"typeA","typeB","Discolor
    await chartData.push(rows)
    
   })
-  let barDataQuary = `   SELECT Defect_Type,Bottle_Type,COUNT(*) as count FROM Defectlog Where Time_Stamp BETWEEN ? AND ? AND Bottle_Type IN(?,?) AND Defect_type IN(?,?,?,?)  GROUP BY Defect_Type,Bottle_Type;`
-  db.all( barDataQuary,[`${givenDate}`,`${nextDate}`,"typeA","typeB","Discoloration","Foreign Particles","Scratches"],async(err,rows)=>{
+   let barDataQuary = `   SELECT Defect_Type,Bottle_Type,COUNT(*) as count FROM Defectlog Where Time_Stamp BETWEEN ? AND ? AND Bottle_Type IN(?,?) AND Defect_type IN(?,?,?,?)  GROUP BY Defect_Type,Bottle_Type;`
+   await db.all( barDataQuary,[`${givenDate}`,`${nextDate}`,"typeA","typeB","Discoloration","Foreign Particles","Scratches"],async(err,rows)=>{
     if(err){
       console.log(err)
     }
@@ -744,7 +744,7 @@ await  db.all(sqlString,[`${fromDate}`,`${toDate}`,...bottletypes],async(err,row
   
   })
   let barDataQuary = ` SELECT Defect_Type,Bottle_Type,COUNT(*) as count FROM Defectlog Where Time_Stamp BETWEEN ? AND ? AND Bottle_Type IN (?,?) AND Defect_type IN(?,?,?,?)  GROUP BY Defect_Type,Bottle_Type;`
-  db.all( barDataQuary,[`${fromDate}`,`${toDate}`,...bottletypes],async(err,rows)=>{
+  await db.all( barDataQuary,[`${fromDate}`,`${toDate}`,...bottletypes],async(err,rows)=>{
     if(err){
       console.log(err)
     }
