@@ -11,10 +11,14 @@ const PieChart = () => {
   const lables = []
   const dataset = []
   const clrs= []
+  try{
   defectTypesAndCount[1].map((ele,index)=>{
     lables.push(ele.Defect_Type)
     dataset.push(ele.count)
   })
+}catch(err){
+  console.log(err)
+}
   const data = {
     labels: lables,
     datasets: [

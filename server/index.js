@@ -647,7 +647,7 @@ app.get("/data", async (req, res) => {
   }
 
   let sqlString1 = `SELECT Time_Stamp,SUM(count) as TotalCount FROM (SELECT Time_Stamp, Defect_Type,COUNT(*) as count FROM Defectlog WHERE Time_Stamp BETWEEN ? AND ? AND Bottle_Type IN (?,?) AND Defect_Type IN (?,?,?)  GROUP BY Defect_Type,Time_Stamp) GROUP BY Time_Stamp;`
-  db.all(sqlString1,[`${givenDate}`,`${nextDate}`,"typeA","typeB","Discoloration","Foreign Particles","Scratches"],async(err,rows)=>{
+await  db.all(sqlString1,[`${givenDate}`,`${nextDate}`,"typeA","typeB","Discoloration","Foreign Particles","Scratches"],async(err,rows)=>{
     if(err){
       console.log(err)
       return
@@ -657,7 +657,7 @@ app.get("/data", async (req, res) => {
   
   let sqlString = `SELECT Defect_Type,COUNT(*) as count FROM Defectlog WHERE Time_Stamp BETWEEN ? AND ? AND Bottle_Type IN (?,?) AND Defect_Type IN (?,?,?)  GROUP BY Defect_Type;`
 
-  db.all(sqlString,[`${givenDate}`,`${nextDate}`,"typeA","typeB","Discoloration","Foreign Particles","Scratches"],async(err,rows)=>{
+  await db.all(sqlString,[`${givenDate}`,`${nextDate}`,"typeA","typeB","Discoloration","Foreign Particles","Scratches"],async(err,rows)=>{
 
     if(err){
 
@@ -666,7 +666,7 @@ app.get("/data", async (req, res) => {
    await chartData.push(rows)
    
   })
-  let barDataQuary = ` SELECT Defect_Type,Bottle_Type,COUNT(*) as count FROM Defectlog Where Time_Stamp BETWEEN ? AND ? AND Bottle_Type IN(?,?) AND Defect_type IN(?,?,?,?)  GROUP BY Defect_Type,Bottle_Type;`
+  let barDataQuary = `   SELECT Defect_Type,Bottle_Type,COUNT(*) as count FROM Defectlog Where Time_Stamp BETWEEN ? AND ? AND Bottle_Type IN(?,?) AND Defect_type IN(?,?,?,?)  GROUP BY Defect_Type,Bottle_Type;`
   db.all( barDataQuary,[`${givenDate}`,`${nextDate}`,"typeA","typeB","Discoloration","Foreign Particles","Scratches"],async(err,rows)=>{
     if(err){
       console.log(err)
@@ -722,7 +722,7 @@ console.log(fromDate,toDate,...bottletypes)
 
   console.log(filters);
   let sqlString1 = `SELECT Time_Stamp,SUM(count) as TotalCount FROM (SELECT Time_Stamp, Defect_Type,COUNT(*) as count FROM Defectlog WHERE Time_Stamp BETWEEN ? AND ? AND Bottle_Type IN (?,?) AND Defect_Type IN (?,?,?)  GROUP BY Defect_Type,Time_Stamp) GROUP BY Time_Stamp;`
-  db.all(sqlString1,[`${fromDate}`,`${toDate}`,...bottletypes],async(err,rows)=>{
+ await db.all(sqlString1,[`${fromDate}`,`${toDate}`,...bottletypes],async(err,rows)=>{
     if(err){
       console.log(err)
       return
@@ -734,7 +734,7 @@ console.log(fromDate,toDate,...bottletypes)
   
   let sqlString = `SELECT Defect_Type,COUNT(*) as count FROM Defectlog WHERE Time_Stamp BETWEEN ? AND ? AND Bottle_Type IN (?,?) AND Defect_Type IN (?,?,?)  GROUP BY Defect_Type;`
 
-  db.all(sqlString,[`${fromDate}`,`${toDate}`,...bottletypes],async(err,rows)=>{
+await  db.all(sqlString,[`${fromDate}`,`${toDate}`,...bottletypes],async(err,rows)=>{
 
     if(err){
 

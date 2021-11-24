@@ -9,10 +9,14 @@ const LineChart = () => {
   const lables = []
   const dataset = []
   const clrs= []
+  try{
    defectTypesAndCount[0].map((ele,index)=>{
     lables.push(ele.Time_Stamp)
     dataset.push(ele.TotalCount)
   })
+}catch(err){
+  console.log(err)
+}
   const data = {
     labels: lables,
     datasets: [
