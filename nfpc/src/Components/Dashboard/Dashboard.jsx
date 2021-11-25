@@ -27,19 +27,22 @@ import "./Dashboard.modules.css";
 import { blue, green } from "@mui/material/colors";
 function Dashboard() {
   const filterConditions = useSelector((state) => state.filter);
+  let User =useSelector((state)=>state.userLog.UserName)
+  console.log(User)
   const [checkBox, setCheckBox] = useState(false)
   const [tab, settab] = useState(true)
   const x = new Date()
   let givenDate = `${x.getFullYear()}-${x.getMonth()+1}-${x.getDate()}`
   const [value, setValue] = useState({ fromd: givenDate, tod: givenDate });
+  const [checkStates,setCheckStates] = useState([true,true,true,true,true])
   const [checkedValues, setCheckedValues] = useState({
     fromDate:givenDate,
     toDate: givenDate,
-    typeA:false,
-    typeB: false,
-    Scratches: false,
-    Discoloration: false,
-    "Foreign Particles": false,
+    typeA:checkStates[0],
+    typeB: checkStates[1],
+    Scratches:checkStates[2],
+    Discoloration:checkStates[4],
+    "Foreign Particles":checkStates[3] ,
     All: false,
   });
  
@@ -75,7 +78,7 @@ function Dashboard() {
 
  
   };
- 
+
 
   useEffect(() => {
   
@@ -93,6 +96,7 @@ function Dashboard() {
 
   return (
     <Grid container xs={12} >
+    <h2>Welcome Back! {User}</h2>
     <h1>Dashboard</h1>
       <Grid xs={12}>
         <Paper elevation={3} className="form">
@@ -139,7 +143,14 @@ function Dashboard() {
                 setCheckedValues((prev) => {
                   return { ...prev, typeA: !prev.typeA };
                 });
+                setCheckStates((prev)=>{
+                 let x = [...prev]
+                 x[0] =!x[0]
+                  return [...x]
+                })
+                console.log(checkStates)
               }}
+              checked={checkStates[0]}
             />
             <FormControlLabel
               control={<Checkbox />}
@@ -148,7 +159,13 @@ function Dashboard() {
                 setCheckedValues((prev) => {
                   return { ...prev, typeB: !prev.typeB};
                 });
+                setCheckStates((prev)=>{
+                 let x = [...prev]
+                 x[1] =!x[1]
+                  return [...x]
+                })
               }}
+              checked={checkStates[1]}
             />
             </div>
           </FormGroup>
@@ -163,7 +180,13 @@ function Dashboard() {
                 setCheckedValues((prev) => {
                   return { ...prev, Scratches: !prev.Scratches};
                 });
+                setCheckStates((prev)=>{
+                 let x = [...prev]
+                 x[2] =!x[2]
+                  return [...x]
+                })
               }}
+              checked={checkStates[2]}
             />
             <FormControlLabel
               control={<Checkbox />}
@@ -173,7 +196,13 @@ function Dashboard() {
                 setCheckedValues((prev) => {
                   return { ...prev, "Foreign Particles": !prev["Foreign Particles"] };
                 });
+                setCheckStates((prev)=>{
+                 let x = [...prev]
+                 x[3] =!x[3]
+                  return [...x]
+                })
               }}
+              checked={checkStates[3]}
             />
             <FormControlLabel
               control={<Checkbox />}
@@ -182,7 +211,13 @@ function Dashboard() {
                 setCheckedValues((prev) => {
                   return { ...prev, Discoloration: !prev.Discoloration };
                 });
+                setCheckStates((prev)=>{
+                 let x = [...prev]
+                 x[4] =!x[4]
+                  return [...x]
+                })
               }}
+              checked={checkStates[4]}
             />
             
             </div>

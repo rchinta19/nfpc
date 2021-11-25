@@ -1,7 +1,7 @@
 import {createSlice} from '@reduxjs/toolkit'
 const initialState={
     UserPresent:false,
-    UserName:"monk",
+    UserName:"",
 }
 const loggingSlice = createSlice({
     name:"logging",
@@ -9,7 +9,7 @@ const loggingSlice = createSlice({
     reducers:{
         LoggingUser:(state,action)=>{
             return {
-                ...state,UserPresent:action.payload.UserPresent,currentPath:action.payload.path
+                ...state,UserPresent:action.payload.UserPresent,currentPath:action.payload.path,UserName:action.payload.UserName
             }
         },
 

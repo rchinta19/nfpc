@@ -2,6 +2,7 @@ import React from "react";
 import './Defectlog.modules.css';
 import { styled, Box } from '@mui/system';
 import ModalUnstyled from '@mui/core/ModalUnstyled';
+import CloseIcon from '@mui/icons-material/Close';
 const PF = "http://localhost:1919/images/";
 
 
@@ -57,6 +58,7 @@ const Renderdefectlog = (props) => {
         BackdropComponent={Backdrop}
       >
         <Box sx={style}>
+        <button onClick={(e)=>setOpen(false)} style={{float: "right",color:"red"}}> <CloseIcon  /> </button>
         <img src={PF+props.dlitm.Image}  alt="" style={{height:'100%' ,width:'100%'}} />
         </Box>
       </StyledModal>

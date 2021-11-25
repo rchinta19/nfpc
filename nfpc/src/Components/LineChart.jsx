@@ -1,8 +1,35 @@
 import React, { useState, useEffect } from "react";
 import { Line } from "react-chartjs-2";
 import { useSelector } from "react-redux";
+import ChartDataLabels from 'chartjs-plugin-datalabels'
+// plugins: {
 
+//   datalabels: {
 
+//     backgroundColor: function(context) {
+
+//       return context.dataset.backgroundColor;
+
+//     },
+
+//     borderRadius: 4,
+
+//     color: 'white',
+
+//     font: {
+
+//       weight: 'bold'
+
+//     },
+
+//     formatter: Math.round,
+
+//     padding: 6
+
+//   }
+
+// },
+// plugins={[ChartDataLabels]}
 const LineChart = () => {
   const defectTypesAndCount = useSelector(state => state.dataset.typeA)
   console.log(defectTypesAndCount)
@@ -40,10 +67,37 @@ const LineChart = () => {
         },
       ],
     },
+    plugins: {
+
+      datalabels: {
+
+        backgroundColor: function(context) {
+
+          return context.dataset.backgroundColor;
+
+        },
+
+        borderRadius: 4,
+
+        color: 'white',
+
+        font: {
+
+          weight: 'bold'
+
+        },
+
+        formatter: Math.round,
+
+        padding: 6
+
+      }
+
+    },
   };
   return(
   <>
-    <Line data={data} options={options} />
+    <Line data={data} options={options} plugins={[ChartDataLabels]}/>
   </>
   )
 };

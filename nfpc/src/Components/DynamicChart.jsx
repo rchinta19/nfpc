@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { Bar } from "react-chartjs-2";
 import { useSelector } from "react-redux";
+import ChartDataLabels from 'chartjs-plugin-datalabels'
+
 
 const VerticalBar = () => {
   const defectTypesAndCount = useSelector((state) => state.dataset.typeA);
-  const lables = ["typeA", "typeB"];
+  const lables = [];
   const dataset= [{
     label: `Discoloration`,
     data: [],
@@ -28,6 +30,12 @@ const VerticalBar = () => {
           dataset.forEach((item,index)=>
               {
               if(item.label===ele.Defect_Type){
+                  if(lables.includes(ele.Bottle_Type)){
+                    
+                  }
+                  else{
+                    lables.push(ele.Bottle_Type)
+                  }
                   dataset[index].data.push(ele.count)
                 return 
               }
@@ -60,10 +68,38 @@ const VerticalBar = () => {
         },
       ],
     },
+    plugins: {
+
+  datalabels: {
+
+    backgroundColor: function(context) {
+
+      return context.dataset.backgroundColor;
+
+    },
+
+    borderRadius: 4,
+
+    color: 'white',
+
+    font: {
+
+      weight: 'bold'
+
+    },
+
+    formatter: Math.round,
+
+    padding: 6
+
+  }
+
+},
+
   };
   return (
     <>
-      <Bar data={data} options={options} />
+      <Bar data={data} options={options}  plugins={[ChartDataLabels]}/>
     </>
   );
 };

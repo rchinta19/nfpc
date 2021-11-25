@@ -28,7 +28,7 @@ app.use(sessions({
 }))
 
 let session
-const db = new sqlite3.Database("./db/nfpc.db", (err) => {
+const db = new sqlite3.Database("./db/nfpc3.db", (err) => {
   if (err) {
     console.log(err);
   }
@@ -489,8 +489,10 @@ app.post('/historyfilterpreviouspage', (req,res) => {
   //end 
 // edit data in system thershold in below
 app.post('/edit' , function(req,res){
-  let data = [req.body.editvalue ,req.body.Sl_No];
-  let sql = `UPDATE SystemThreshold SET Score = ? WHERE Sl_No = ?`;
+  console.log("request arrived for system threshold to update values")
+  let data = [req.body.store.Scratches + "%",req.body.store.ForeignParticles + "%",req.body.store.Discoloration + "%" ,req.body.Sl_No];
+  console.log([req.body.store.Scratches,req.body.store.ForeignParticles,req.body.store.Discoloration ,req.body.Sl_No])
+  let sql = `UPDATE SystemThreshold SET Scratches = ?, Foreign_Particles=?, Discoloration=? WHERE Sl_No = ?`;
 
     db.all(sql, data, function(err,edit){
     if (err) {
@@ -611,8 +613,8 @@ app.get("/data", async (req, res) => {
   let bottletypes = []
   const chartData =[]
  const x = new Date()
-  let givenDate = `${x.getFullYear()}-${x.getMonth()+1}-${x.getDate()-2}`
-  let nextDate =`${x.getFullYear()}-${x.getMonth()+1}-${x.getDate()-1}`
+  let givenDate = `${x.getFullYear()}-${x.getMonth()+1}-${x.getDate()-1}`
+  let nextDate =`${x.getFullYear()}-${x.getMonth()+1}-${x.getDate()}`
   // 
 
   for (const [key, value] of Object.entries(req.body)) {

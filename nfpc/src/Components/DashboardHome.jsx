@@ -41,7 +41,7 @@ import Input from '@mui/material/Input';
 import InputLabel from '@mui/material/InputLabel';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import { typography } from "@mui/system";
-
+import CloseIcon from '@mui/icons-material/Close';
 const useStyles = makeStyles({
   searchStyles: {
     border: "1px solid #E2E0E1",
@@ -76,6 +76,7 @@ function DashboardHome(props) {
 
   const classes = useStyles();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  let User =useSelector((state)=>state.userLog.UserName)
   const LogoutHandler = () => {
 
     axios.get("/logout").then((res) => {
@@ -85,7 +86,7 @@ function DashboardHome(props) {
     dispatch(LoggingUser({UserPresent:false}))
     
   };
-  let User =useSelector((state)=>state.userLog.UserName)
+  let user =useSelector((state)=>state.userLog.UserName)
   let CurrentLocation = props.location
   let currentUserPath = useSelector((state)=>state.userLog.currentPath)
   const [p,setP] = useState(currentUserPath)
@@ -167,6 +168,7 @@ console.log(User)
           <div className="search-icons">
           <PersonOutlineOutlinedIcon className={classes.IconStyles + ` icon-not`} aria-describedby={id} variant="contained" onClick={handleClick}
   />
+  <p style={{fontWeight:'bold', fontSize:'1.5rem'}}>{user}</p>
 <Popover
   id={id}
   open={open}
@@ -193,6 +195,7 @@ console.log(User)
       sx={style}
       noValidate
       autoComplete="off">
+      <button onClick={(e)=>setOpen(false)} style={{float: "right",color:"red"}}> <CloseIcon  /> </button>
         <Typography variant="h5" component="h2" style={header}>Change Password</Typography>
         <FormControl variant="standard" style={{width:"250px",padding:"2px"}}>
         <InputLabel htmlFor="component-simple">Enter Current Password</InputLabel>

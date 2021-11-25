@@ -2,7 +2,7 @@ import React,{useEffect,useState} from 'react';
 import { Pie } from 'react-chartjs-2';
 import { useSelector } from 'react-redux';
 
-
+import ChartDataLabels from 'chartjs-plugin-datalabels'
 
 const PieChart = () => {
 
@@ -44,10 +44,39 @@ const PieChart = () => {
         borderWidth: 1,
       },
     ],
+    plugins: {
+
+  datalabels: {
+
+    backgroundColor: function(context) {
+
+      return context.dataset.backgroundColor;
+
+    },
+
+    borderRadius: 4,
+
+    color: 'white',
+
+    font: {
+
+      weight: 'bold'
+
+    },
+
+    formatter: Math.round,
+
+    padding: 6
+
+  }
+
+},
+
+
   };
   return(
   <>
-    <Pie data={data} />
+    <Pie data={data} plugins={[ChartDataLabels]} />
   </>
 )};
 
